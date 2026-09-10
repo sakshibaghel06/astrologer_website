@@ -1,4 +1,5 @@
-import type { Metadata } from 'next'
+'use client'
+
 import Link from 'next/link'
 import Container from '@/components/ui/Container'
 import Card from '@/components/ui/Card'
@@ -15,14 +16,9 @@ import {
   ArrowRight,
   CheckCircle,
 } from 'lucide-react'
+import { useLanguage } from '@/components/LanguageProvider'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
-
-export const metadata: Metadata = {
-  title: 'Contact Us — Get in Touch',
-  description:
-    'Reach out to AstroJyotish with any questions about our Vedic astrology services, or to arrange a personalised consultation.',
-}
 
 // ─── Static data ──────────────────────────────────────────────────────────────
 
@@ -82,6 +78,18 @@ const REASSURANCES = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ContactPage() {
+  const { t } = useLanguage()
+  const contactInfo = [
+    { ...CONTACT_INFO[0], label: t.common.phone, secondary: t.home.confidentialDescription },
+    { ...CONTACT_INFO[1], label: t.common.email, secondary: t.home.finalDescription },
+    { ...CONTACT_INFO[2], label: t.home.getInTouch, secondary: t.home.personalisedDescription },
+    { ...CONTACT_INFO[3], label: t.common.hours, secondary: t.common.sundayByAppointment },
+  ]
+  const reassurances = [
+    { ...REASSURANCES[0], title: t.home.confidential, body: t.home.confidentialDescription },
+    { ...REASSURANCES[1], title: t.home.getInTouch, body: t.home.servicesSubtitle },
+    { ...REASSURANCES[2], title: t.home.experiencedGuidance, body: t.home.personalisedDescription },
+  ]
   return (
     <>
       {/* ══════════════════════════════════════════════════════════════
@@ -89,7 +97,7 @@ export default function ContactPage() {
       ══════════════════════════════════════════════════════════════ */}
       <section
         className="relative pt-32 pb-20 overflow-hidden"
-        aria-label="Contact page hero"
+        aria-label={t.home.getInTouch}
       >
         {/* Ambient glows */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -102,18 +110,16 @@ export default function ContactPage() {
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/5 text-gold-bright text-xs font-semibold tracking-[0.2em] uppercase mb-7">
               <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-              Get in Touch
+              {t.home.getInTouch}
             </div>
 
             <h1 className="heading-serif text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
-              We&apos;re Here to Help{' '}
-              <span className="text-gradient-gold">You Find Clarity</span>
+              {t.home.guidanceYouCan}{' '}
+              <span className="text-gradient-gold">{t.home.trust}</span>
             </h1>
 
             <p className="text-silver text-lg leading-relaxed max-w-xl">
-              Whether you have a question about our services, want to discuss
-              which reading is right for you, or are ready to book — we&apos;d
-              love to hear from you.
+              {t.home.finalDescription}
             </p>
           </div>
         </Container>
@@ -136,7 +142,7 @@ export default function ContactPage() {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {CONTACT_INFO.map((item) => {
+            {contactInfo.map((item) => {
               const Icon = item.icon
               const inner = (
                 <>
@@ -209,11 +215,10 @@ export default function ContactPage() {
                   id="contact-form-heading"
                   className="heading-serif text-2xl sm:text-3xl font-bold mb-2"
                 >
-                  Send Us a Message
+                  {t.home.getInTouch}
                 </h2>
                 <p className="text-muted text-sm leading-relaxed">
-                  Fill in the form below and we&apos;ll get back to you within
-                  one business day.
+                  {t.home.finalDescription}
                 </p>
               </div>
 
@@ -222,7 +227,7 @@ export default function ContactPage() {
             </div>
 
             {/* ── Sidebar ────────────────────────────────────────────── */}
-            <aside className="flex flex-col gap-5" aria-label="Additional contact details">
+            <aside className="flex flex-col gap-5" aria-label={t.home.getInTouch}>
 
               {/* Quick booking nudge */}
               <div className="glass rounded-2xl border border-violet/30 p-6 flex flex-col gap-4">
@@ -231,15 +236,14 @@ export default function ContactPage() {
                 </div>
                 <div>
                   <h3 className="font-serif text-cream font-semibold mb-1">
-                    Ready to Book?
+                    {t.home.bookConsultation}
                   </h3>
                   <p className="text-muted text-sm leading-relaxed">
-                    If you know which service you need, you can go straight to
-                    the booking form.
+                    {t.home.servicesSubtitle}
                   </p>
                 </div>
                 <Link href="/appointment" className="btn-primary text-xs px-5 py-2.5 w-fit">
-                  Book a Consultation
+                  {t.home.bookConsultation}
                   <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                 </Link>
               </div>
@@ -249,7 +253,7 @@ export default function ContactPage() {
                 <div className="flex items-center gap-3">
                   <Clock className="w-4 h-4 text-gold-bright shrink-0" aria-hidden="true" />
                   <h3 className="font-serif text-cream font-semibold text-sm">
-                    Working Hours
+                    {t.common.hours}
                   </h3>
                 </div>
                 <ul className="flex flex-col gap-2" role="list">
@@ -277,7 +281,7 @@ export default function ContactPage() {
               {/* Social / direct contact */}
               <div className="card-cosmic p-5 flex flex-col gap-3">
                 <h3 className="font-serif text-cream font-semibold text-sm">
-                  Direct Contact
+                  {t.home.getInTouch}
                 </h3>
                 <a
                   href="mailto:hello@astrojyotish.com"
@@ -317,19 +321,19 @@ export default function ContactPage() {
           <div className="text-center mb-12">
             <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase text-gold-bright mb-4">
               <span className="glow-dot" aria-hidden="true" />
-              Before You Reach Out
+              {t.home.getInTouch}
               <span className="glow-dot" aria-hidden="true" />
             </span>
             <h2
               id="reassurance-heading"
               className="heading-serif text-2xl sm:text-3xl font-bold"
             >
-              A Few Things Worth Knowing
+              {t.home.whyChooseUs}
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {REASSURANCES.map((item) => {
+            {reassurances.map((item) => {
               const Icon = item.icon
               return (
                 <Card key={item.title} accent className="p-6 flex flex-col gap-4">
@@ -349,12 +353,12 @@ export default function ContactPage() {
 
           {/* Final nudge */}
           <p className="text-center text-muted text-sm mt-12">
-            Prefer to go straight to a booking?{' '}
+            {t.home.bookConsultation}{' '}
             <Link
               href="/appointment"
               className="text-gold-bright hover:text-gold underline-offset-2 hover:underline transition-colors"
             >
-              Use the appointment form
+              {t.common.appointmentForm}
             </Link>{' '}
             to choose a service, date, and time slot.
           </p>

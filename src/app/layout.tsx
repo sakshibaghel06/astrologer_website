@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import { Navbar } from '@/components/layout'
 import { Footer } from '@/components/layout'
+import { LanguageProvider } from '@/components/LanguageProvider'
+import { ThemeProvider } from '@/components/ThemeProvider'
 import './globals.css'
 
 // ─── Metadata ────────────────────────────────────────────────────────────────
@@ -76,13 +78,17 @@ export default function RootLayout({
           Skip to main content
         </a>
 
-        <Navbar />
+        <ThemeProvider>
+        <LanguageProvider>
+  <Navbar />
 
-        <main id="main-content" className="flex-1">
-          {children}
-        </main>
+  <main id="main-content" className="flex-1">
+    {children}
+  </main>
 
-        <Footer />
+  <Footer />
+  </LanguageProvider>
+  </ThemeProvider>
       </body>
     </html>
   )

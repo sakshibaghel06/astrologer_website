@@ -1,6 +1,7 @@
 import { Check } from 'lucide-react'
 import { STATIC_PRODUCTS } from '@/lib/shop-data'
 import type { AvailableService } from '@/lib/validations'
+import { useLanguage } from '@/components/LanguageProvider'
 
 interface ServiceSelectorProps {
   selected: AvailableService | ''
@@ -18,9 +19,10 @@ const ICON_GRADIENT: Record<string, string> = {
 }
 
 export default function ServiceSelector({ selected, onSelect }: ServiceSelectorProps) {
+  const { t } = useLanguage()
   return (
     <fieldset className="border-none p-0 m-0">
-      <legend className="sr-only">Select a service</legend>
+      <legend className="sr-only">{t.common.selectService}</legend>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {STATIC_PRODUCTS.map((product) => {
           const isSelected = selected === product.name

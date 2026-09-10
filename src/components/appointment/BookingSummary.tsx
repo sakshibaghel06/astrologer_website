@@ -2,6 +2,7 @@ import { format, parseISO } from 'date-fns'
 import { CalendarDays, Clock, User, Mail, Phone, FileText, Star } from 'lucide-react'
 import { formatTimeSlot } from '@/lib/appointment-utils'
 import { STATIC_PRODUCTS } from '@/lib/shop-data'
+import { useLanguage } from '@/components/LanguageProvider'
 
 interface BookingSummaryProps {
   service: string
@@ -52,6 +53,7 @@ export default function BookingSummary({
   submitting,
   error,
 }: BookingSummaryProps) {
+  const { t } = useLanguage()
   const product = STATIC_PRODUCTS.find((p) => p.name === service)
   const formattedDate = format(parseISO(date), 'EEEE, d MMMM yyyy')
   const formattedTime = formatTimeSlot(time)
@@ -66,7 +68,7 @@ export default function BookingSummary({
               <Star className="w-5 h-5 text-white fill-current" aria-hidden="true" />
             </div>
             <div>
-              <p className="text-muted text-[10px] uppercase tracking-widest mb-0.5">Service</p>
+              <p className="text-muted text-[10px] uppercase tracking-widest mb-0.5">{t.common.service}</p>
               <p className="text-cream font-serif font-semibold text-base leading-tight">{service}</p>
             </div>
           </div>
@@ -79,11 +81,11 @@ export default function BookingSummary({
 
         {/* Detail rows */}
         <div className="grid sm:grid-cols-2 gap-4">
-          <SummaryRow icon={CalendarDays} label="Date"  value={formattedDate} />
-          <SummaryRow icon={Clock}        label="Time"  value={`${formattedTime} IST`} />
-          <SummaryRow icon={User}         label="Name"  value={name} />
-          <SummaryRow icon={Mail}         label="Email" value={email} />
-          <SummaryRow icon={Phone}        label="Phone" value={phone} />
+          <SummaryRow icon={CalendarDays} label={t.common.date}  value={formattedDate} />
+          <SummaryRow icon={Clock}        label={t.common.time}  value={`${formattedTime} IST`} />
+          <SummaryRow icon={User}         label={t.common.name}  value={name} />
+          <SummaryRow icon={Mail}         label={t.common.email} value={email} />
+          <SummaryRow icon={Phone}        label={t.common.phone} value={phone} />
         </div>
 
         {notes.trim() && (
@@ -92,7 +94,7 @@ export default function BookingSummary({
               <FileText className="w-4 h-4 text-gold-bright" aria-hidden="true" />
             </div>
             <div>
-              <span className="text-muted text-[10px] uppercase tracking-widest block mb-1">Notes</span>
+              <span className="text-muted text-[10px] uppercase tracking-widest block mb-1">{t.common.notesQuestions}</span>
               <p className="text-silver text-sm leading-relaxed">{notes}</p>
             </div>
           </div>
@@ -101,8 +103,7 @@ export default function BookingSummary({
 
       {/* Info note */}
       <p className="text-muted text-xs leading-relaxed text-center">
-        Your appointment request will be sent as <strong className="text-silver">pending</strong>.
-        We will contact you to confirm within one business day.
+        {t.home.finalDescription}
       </p>
 
       {/* Server error */}
@@ -124,7 +125,7 @@ export default function BookingSummary({
           disabled={submitting}
           className="btn-secondary flex-1 text-sm"
         >
-          Back &amp; Edit
+          {t.common.backAndEdit}
         </button>
         <button
           type="button"
@@ -139,10 +140,10 @@ export default function BookingSummary({
                 className="inline-block w-4 h-4 border-2 border-cosmic-black border-t-transparent rounded-full animate-spin"
                 aria-hidden="true"
               />
-              Confirming…
+              {t.common.confirming}
             </>
           ) : (
-            'Confirm Appointment'
+            t.common.confirmAppointment
           )}
         </button>
       </div>

@@ -1,5 +1,8 @@
+'use client'
+
 import Link from 'next/link'
 import { Star, Mail, Phone, MapPin, Share2, Heart, Rss } from 'lucide-react'
+import { useLanguage } from '@/components/LanguageProvider'
 
 const FOOTER_LINKS = {
   services: [
@@ -25,6 +28,9 @@ const SOCIAL_LINKS = [
 
 export default function Footer() {
   const year = new Date().getFullYear()
+  const { t } = useLanguage()
+  const footerServices = [t.home.detailedBirthChart, t.home.compatibilityReading, t.home.careerAstrology, t.home.personalisedRemedies, t.services.lifeGuidance]
+  const quickLinks = [t.nav.about, t.nav.services, t.nav.appointment, t.nav.contact]
 
   return (
     <footer className="relative border-t border-cosmic-border bg-cosmic-deep/80 mt-auto">
@@ -49,8 +55,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-muted text-sm leading-relaxed">
-              Ancient Vedic wisdom meets modern clarity. Discover your cosmic
-              path through authentic Jyotish guidance.
+              {t.home.astrologyDescription2}
             </p>
 
             {/* Social links */}
@@ -71,17 +76,17 @@ export default function Footer() {
           {/* Services */}
           <div>
             <h3 className="font-serif text-cream font-semibold mb-4 text-sm tracking-wide uppercase">
-              Services
+              {t.common.footerServices}
             </h3>
             <ul className="flex flex-col gap-2.5" role="list">
-              {FOOTER_LINKS.services.map((link) => (
+              {FOOTER_LINKS.services.map((link, index) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
                     className="text-sm text-muted hover:text-gold-bright transition-colors duration-200 flex items-center gap-2 group"
                   >
                     <span className="w-1 h-1 rounded-full bg-violet group-hover:bg-gold-bright transition-colors" aria-hidden="true" />
-                    {link.label}
+                    {footerServices[index]}
                   </Link>
                 </li>
               ))}
@@ -91,17 +96,17 @@ export default function Footer() {
           {/* Quick links */}
           <div>
             <h3 className="font-serif text-cream font-semibold mb-4 text-sm tracking-wide uppercase">
-              Quick Links
+              {t.common.quickLinks}
             </h3>
             <ul className="flex flex-col gap-2.5" role="list">
-              {FOOTER_LINKS.quickLinks.map((link) => (
+              {FOOTER_LINKS.quickLinks.map((link, index) => (
                 <li key={link.label}>
                   <Link
                     href={link.href}
                     className="text-sm text-muted hover:text-gold-bright transition-colors duration-200 flex items-center gap-2 group"
                   >
                     <span className="w-1 h-1 rounded-full bg-violet group-hover:bg-gold-bright transition-colors" aria-hidden="true" />
-                    {link.label}
+                    {quickLinks[index]}
                   </Link>
                 </li>
               ))}
@@ -111,7 +116,7 @@ export default function Footer() {
           {/* Contact info */}
           <div>
             <h3 className="font-serif text-cream font-semibold mb-4 text-sm tracking-wide uppercase">
-              Contact
+              {t.common.contact}
             </h3>
             <ul className="flex flex-col gap-3" role="list">
               <li>
@@ -141,10 +146,10 @@ export default function Footer() {
             {/* Working hours */}
             <div className="mt-4 pt-4 border-t border-cosmic-border">
               <p className="text-xs font-semibold uppercase tracking-widest text-gold-bright mb-2">
-                Hours
+                {t.common.hours}
               </p>
-              <p className="text-xs text-muted">Mon – Sat: 9:00 AM – 7:00 PM</p>
-              <p className="text-xs text-muted">Sunday: By appointment only</p>
+              <p className="text-xs text-muted">{t.common.mondaySaturday}</p>
+              <p className="text-xs text-muted">{t.common.sundayByAppointment}</p>
             </div>
           </div>
         </div>
@@ -153,9 +158,9 @@ export default function Footer() {
         <div className="border-t border-cosmic-border py-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-muted">
           <p>© {year} AstroJyotish. All rights reserved.</p>
           <p className="flex items-center gap-1">
-            Crafted with
+            {t.home.practical} 
             <Star className="w-3 h-3 text-gold-bright fill-current mx-0.5" aria-hidden="true" />
-            cosmic intention
+            {t.home.cosmicDirection}
           </p>
         </div>
       </div>

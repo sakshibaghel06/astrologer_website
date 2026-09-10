@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getMessages } from '@/app/admin/actions/messages'
 import MessagesClient from '@/components/admin/MessagesClient'
 import { AlertCircle } from 'lucide-react'
+import LocalizedCopy from '@/components/LocalizedCopy'
 
 export const metadata: Metadata = { title: 'Messages' }
 
@@ -11,8 +12,8 @@ export default async function MessagesPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="heading-serif text-2xl sm:text-3xl font-bold mb-1">Messages</h1>
-        <p className="text-muted text-sm">Contact form submissions from your website visitors.</p>
+        <h1 className="heading-serif text-2xl sm:text-3xl font-bold mb-1"><LocalizedCopy id="adminMessages" /></h1>
+        <p className="text-muted text-sm"><LocalizedCopy id="adminMessages" /></p>
       </div>
 
       {result.success ? (

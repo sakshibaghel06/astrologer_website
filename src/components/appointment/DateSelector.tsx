@@ -1,3 +1,5 @@
+'use client'
+
 import {
   format,
   addDays,
@@ -10,6 +12,7 @@ import {
   isSameDay,
 } from 'date-fns'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
+import { useLanguage } from '@/components/LanguageProvider'
 
 interface DateSelectorProps {
   selected: string          // YYYY-MM-DD or ''
@@ -31,6 +34,7 @@ export default function DateSelector({
   onPrevMonth,
   onNextMonth,
 }: DateSelectorProps) {
+  const { t } = useLanguage()
   const monthStart = startOfMonth(viewMonth)
   const monthEnd   = endOfMonth(viewMonth)
   const days       = eachDayOfInterval({ start: monthStart, end: monthEnd })
@@ -54,7 +58,7 @@ export default function DateSelector({
           type="button"
           onClick={onPrevMonth}
           disabled={!canGoPrev}
-          aria-label="Previous month"
+          aria-label={t.common.back}
           className="w-8 h-8 rounded-full border border-cosmic-border flex items-center justify-center text-silver hover:text-cream hover:border-violet/40 transition-all duration-200 disabled:opacity-30 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-gold-bright"
         >
           <ChevronLeft className="w-4 h-4" aria-hidden="true" />
@@ -67,7 +71,7 @@ export default function DateSelector({
         <button
           type="button"
           onClick={onNextMonth}
-          aria-label="Next month"
+          aria-label={t.common.continue}
           className="w-8 h-8 rounded-full border border-cosmic-border flex items-center justify-center text-silver hover:text-cream hover:border-violet/40 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-gold-bright"
         >
           <ChevronRight className="w-4 h-4" aria-hidden="true" />

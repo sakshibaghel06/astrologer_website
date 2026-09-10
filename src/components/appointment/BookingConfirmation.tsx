@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { format, parseISO } from 'date-fns'
 import { CheckCircle2, CalendarDays, Clock, Star, Home, RotateCcw } from 'lucide-react'
 import { formatTimeSlot } from '@/lib/appointment-utils'
+import { useLanguage } from '@/components/LanguageProvider'
 
 interface BookingConfirmationProps {
   service: string
@@ -20,6 +21,7 @@ export default function BookingConfirmation({
   email,
   onBookAnother,
 }: BookingConfirmationProps) {
+  const { t } = useLanguage()
   const formattedDate = format(parseISO(date), 'EEEE, d MMMM yyyy')
   const formattedTime = formatTimeSlot(time)
 
@@ -55,14 +57,12 @@ export default function BookingConfirmation({
       {/* Heading */}
       <div className="flex flex-col gap-2">
         <h3 className="heading-serif text-2xl sm:text-3xl font-bold">
-          Appointment Request{' '}
-          <span className="text-gradient-gold">Received</span>
+          {t.common.appointmentForm}{' '}
+          <span className="text-gradient-gold">{t.common.messageReceived}</span>
         </h3>
         <p className="text-silver text-sm max-w-sm leading-relaxed">
-          Thank you, <strong className="text-cream">{name}</strong>. Your
-          appointment request has been received. We will contact you at{' '}
-          <strong className="text-cream">{email}</strong> to confirm the
-          appointment.
+          {t.common.thankYouMessage} <strong className="text-cream">{name}</strong>{' '}
+          <strong className="text-cream">{email}</strong>
         </p>
       </div>
 
@@ -81,12 +81,12 @@ export default function BookingConfirmation({
           <span>{formattedTime} IST</span>
         </div>
         <div className="pt-2 border-t border-cosmic-border">
-          <span className="badge-gold text-[10px]">Status: Pending Confirmation</span>
+          <span className="badge-gold text-[10px]">{t.home.confidential}</span>
         </div>
       </div>
 
       <p className="text-muted text-xs max-w-sm leading-relaxed">
-        If you need to reschedule or cancel, please contact us at{' '}
+        {t.home.getInTouch}{' '}
         <a href="mailto:hello@astrojyotish.com" className="text-gold-bright hover:underline">
           hello@astrojyotish.com
         </a>{' '}
@@ -97,7 +97,7 @@ export default function BookingConfirmation({
       <div className="flex flex-col sm:flex-row gap-3 w-full max-w-sm">
         <Link href="/" className="btn-secondary flex-1 text-sm justify-center">
           <Home className="w-4 h-4" aria-hidden="true" />
-          Back to Home
+          {t.nav.home}
         </Link>
         <button
           type="button"
@@ -105,7 +105,7 @@ export default function BookingConfirmation({
           className="btn-primary flex-1 text-sm"
         >
           <RotateCcw className="w-4 h-4" aria-hidden="true" />
-          Book Another
+          {t.common.bookNow}
         </button>
       </div>
     </div>

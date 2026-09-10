@@ -6,8 +6,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Star, AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react'
 import { adminLoginSchema, type AdminLoginSchema } from '@/lib/validations'
 import { signIn } from '@/app/admin/actions/auth'
+import { useLanguage } from '@/components/LanguageProvider'
 
 export default function AdminLoginPage() {
+  const { t } = useLanguage()
   const [serverError, setServerError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -45,13 +47,13 @@ export default function AdminLoginPage() {
             <h1 className="font-serif text-2xl font-bold text-cream">
               Astro<span className="text-gradient-gold">Jyotish</span>
             </h1>
-            <p className="text-muted text-sm mt-0.5">Admin Portal</p>
+            <p className="text-muted text-sm mt-0.5">{t.common.admin}</p>
           </div>
         </div>
 
         {/* Form card */}
         <div className="card-cosmic p-7">
-          <h2 className="heading-serif text-xl font-semibold mb-6 text-center">Sign In</h2>
+          <h2 className="heading-serif text-xl font-semibold mb-6 text-center">{t.common.signIn}</h2>
 
           <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-5">
             {/* Server error */}
@@ -65,7 +67,7 @@ export default function AdminLoginPage() {
             {/* Email */}
             <div>
               <label htmlFor="login-email" className="label-cosmic">
-                Email Address
+                {t.common.email}
               </label>
               <input
                 id="login-email"
@@ -88,7 +90,7 @@ export default function AdminLoginPage() {
             {/* Password */}
             <div>
               <label htmlFor="login-password" className="label-cosmic">
-                Password
+                {t.common.password}
               </label>
               <div className="relative">
                 <input
@@ -104,7 +106,7 @@ export default function AdminLoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(v => !v)}
-                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  aria-label={showPassword ? t.common.close : t.common.password}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-silver transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -125,8 +127,8 @@ export default function AdminLoginPage() {
               className="btn-primary w-full mt-1 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {isPending ? (
-                <><Loader2 className="w-4 h-4 animate-spin" />Signing in…</>
-              ) : 'Sign In'}
+                <><Loader2 className="w-4 h-4 animate-spin" />{t.common.signIn}…</>
+              ) : t.common.signIn}
             </button>
           </form>
         </div>

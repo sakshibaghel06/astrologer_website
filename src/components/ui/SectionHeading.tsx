@@ -1,10 +1,12 @@
+import type { ReactNode } from 'react'
+
 interface SectionHeadingProps {
   /** Small label shown above the main title */
-  label?: string
-  title: string
+  label?: ReactNode
+  title: ReactNode
   /** Part of the title to highlight in gold gradient */
-  highlight?: string
-  subtitle?: string
+  highlight?: ReactNode
+  subtitle?: ReactNode
   /** Alignment. Defaults to 'center' */
   align?: 'left' | 'center'
   className?: string
@@ -26,6 +28,9 @@ export default function SectionHeading({
   // If a highlight word/phrase is provided, split the title around it
   const renderTitle = () => {
     if (!highlight) return <span>{title}</span>
+    if (typeof title !== 'string' || typeof highlight !== 'string') {
+      return <><span>{title}</span> <span className="text-gradient-gold">{highlight}</span></>
+    }
     const parts = title.split(highlight)
     return (
       <>

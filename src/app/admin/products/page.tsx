@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getProducts } from '@/app/admin/actions/products'
 import ProductsClient from '@/components/admin/ProductsClient'
 import { AlertCircle } from 'lucide-react'
+import LocalizedCopy from '@/components/LocalizedCopy'
 
 export const metadata: Metadata = { title: 'Products' }
 
@@ -11,8 +12,8 @@ export default async function ProductsPage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="heading-serif text-2xl sm:text-3xl font-bold mb-1">Products</h1>
-        <p className="text-muted text-sm">Manage your astrology services and products.</p>
+        <h1 className="heading-serif text-2xl sm:text-3xl font-bold mb-1"><LocalizedCopy id="adminProducts" /></h1>
+        <p className="text-muted text-sm"><LocalizedCopy id="adminProducts" /></p>
       </div>
 
       {result.success ? (

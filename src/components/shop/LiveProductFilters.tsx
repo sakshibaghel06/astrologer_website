@@ -5,6 +5,7 @@ import { SlidersHorizontal } from 'lucide-react'
 import LiveProductCard from './LiveProductCard'
 import type { Product, ProductCategory } from '@/types/database'
 import type { ShopCategory } from '@/lib/shop-data'
+import { useLanguage } from '@/components/LanguageProvider'
 
 interface LiveProductFiltersProps {
   products: Product[]
@@ -13,6 +14,7 @@ interface LiveProductFiltersProps {
 
 export default function LiveProductFilters({ products, categories }: LiveProductFiltersProps) {
   const [active, setActive] = useState<ProductCategory | 'all'>('all')
+  const { t } = useLanguage()
 
   const filtered =
     active === 'all'
@@ -25,11 +27,11 @@ export default function LiveProductFilters({ products, categories }: LiveProduct
       <div
         className="flex flex-col sm:flex-row sm:items-center gap-4"
         role="group"
-        aria-label="Filter services by category"
+        aria-label={t.common.filter}
       >
         <span className="hidden sm:flex items-center gap-2 text-xs font-semibold text-muted uppercase tracking-widest shrink-0">
           <SlidersHorizontal className="w-3.5 h-3.5" aria-hidden="true" />
-          Filter
+          {t.common.filter}
         </span>
 
         <div className="flex flex-wrap gap-2">
@@ -63,7 +65,7 @@ export default function LiveProductFilters({ products, categories }: LiveProduct
         </div>
 
         <span className="text-xs text-muted sm:ml-auto shrink-0">
-          {filtered.length} service{filtered.length !== 1 ? 's' : ''}
+          {filtered.length} {t.common.servicesCount}
         </span>
       </div>
 
@@ -72,7 +74,7 @@ export default function LiveProductFilters({ products, categories }: LiveProduct
         <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           role="list"
-          aria-label="Services list"
+          aria-label={t.common.servicesCount}
           aria-live="polite"
           aria-atomic="false"
         >
@@ -85,13 +87,13 @@ export default function LiveProductFilters({ products, categories }: LiveProduct
       ) : (
         <div className="flex flex-col items-center justify-center py-20 text-center gap-4">
           <span className="text-4xl" aria-hidden="true">✦</span>
-          <p className="text-silver font-medium">No services in this category yet.</p>
+          <p className="text-silver font-medium">{t.common.noServices}</p>
           <button
             type="button"
             onClick={() => setActive('all')}
             className="btn-ghost text-sm"
           >
-            View all services
+            {t.common.viewAllServices}
           </button>
         </div>
       )}

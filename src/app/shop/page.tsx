@@ -17,6 +17,7 @@ import {
   MessageCircle,
   AlertCircle,
 } from 'lucide-react'
+import LocalizedCopy from '@/components/LocalizedCopy'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -76,7 +77,7 @@ export default async function ShopPage() {
       ══════════════════════════════════════════════════════════════ */}
       <section
         className="relative pt-32 pb-20 overflow-hidden"
-        aria-label="Services page hero"
+        aria-label="Shop"
       >
         {/* Ambient glows */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -126,18 +127,16 @@ export default async function ShopPage() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/5 text-gold-bright text-xs font-semibold tracking-[0.2em] uppercase mb-7">
               <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-              Astrology Services
+              <LocalizedCopy id="shopBadge" />
             </div>
 
             <h1 className="heading-serif text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
-              Guidance Designed for{' '}
-              <span className="text-gradient-gold">Your Journey</span>
+              <LocalizedCopy id="shopTitlePrefix" />{' '}
+              <span className="text-gradient-gold"><LocalizedCopy id="shopTitleHighlight" /></span>
             </h1>
 
             <p className="text-silver text-lg leading-relaxed max-w-xl">
-              Explore personalised astrology consultations and reports designed
-              to bring clarity to the areas of life that matter most — love,
-              career, relationships, and purpose.
+              <LocalizedCopy id="shopDescription" />
             </p>
           </div>
         </Container>
@@ -160,10 +159,10 @@ export default async function ShopPage() {
               id="services-grid-heading"
               className="heading-serif text-2xl sm:text-3xl font-bold mb-2"
             >
-              All Services
+              <LocalizedCopy id="shopAllServices" />
             </h2>
             <p className="text-muted text-sm">
-              Filter by category or browse all available readings and reports.
+              <LocalizedCopy id="shopFilterDescription" />
             </p>
           </div>
 
@@ -171,7 +170,7 @@ export default async function ShopPage() {
           {dbError && (
             <div className="flex items-center gap-2 mb-8 rounded-xl border border-amber-800/40 bg-amber-900/20 px-4 py-3 text-sm text-amber-300">
               <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
-              Showing featured services. Live product catalogue temporarily unavailable.
+              <LocalizedCopy id="shopDbError" />
             </div>
           )}
 
@@ -202,10 +201,10 @@ export default async function ShopPage() {
         <Container>
           <SectionHeading
             id="benefits-heading"
-            label="The Difference"
-            title="Why Choose a"
-            highlight="Personalised Reading?"
-            subtitle="A chart-based consultation goes far deeper than any sun-sign horoscope."
+            label={<LocalizedCopy id="shopBenefitsLabel" />}
+            title={<LocalizedCopy id="shopBenefitsTitle" />}
+            highlight={<LocalizedCopy id="shopBenefitsHighlight" />}
+            subtitle={<LocalizedCopy id="shopBenefitsSubtitle" />}
             className="mb-14"
           />
 
@@ -217,8 +216,8 @@ export default async function ShopPage() {
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet/20 to-gold/10 border border-violet/20 flex items-center justify-center">
                     <Icon className="w-6 h-6 text-gold-bright" aria-hidden="true" />
                   </div>
-                  <h3 className="font-serif text-cream font-semibold">{b.title}</h3>
-                  <p className="text-muted text-sm leading-relaxed">{b.description}</p>
+                  <h3 className="font-serif text-cream font-semibold"><LocalizedCopy id="shopBenefitsTitle" /></h3>
+                  <p className="text-muted text-sm leading-relaxed"><LocalizedCopy id="shopBenefitsSubtitle" /></p>
                 </Card>
               )
             })}
@@ -249,30 +248,28 @@ export default async function ShopPage() {
               id="shop-cta-heading"
               className="heading-serif text-2xl sm:text-3xl font-bold text-balance"
             >
-              Not Sure Which Service{' '}
-              <span className="text-gradient-gold">Is Right for You?</span>
+              <LocalizedCopy id="shopCtaTitle" />{' '}
+              <span className="text-gradient-gold"><LocalizedCopy id="shopCtaHighlight" /></span>
             </h2>
 
             <p className="text-silver text-base max-w-md leading-relaxed">
-              We&apos;re happy to help you choose the right consultation based
-              on what you want clarity on. Send us a message and we&apos;ll
-              guide you.
+              <LocalizedCopy id="shopCtaDescription" />
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/contact" className="btn-primary text-sm px-8 py-3.5">
                 <MessageCircle className="w-4 h-4" aria-hidden="true" />
-                Contact Us
+                <LocalizedCopy id="contactUs" />
               </Link>
               <Link href="/about" className="btn-secondary text-sm px-8 py-3.5">
-                Learn About Our Approach
+                <LocalizedCopy id="aboutApproach" />
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
             </div>
 
             <p className="text-muted text-xs flex items-center gap-2 mt-1">
               <Shield className="w-3.5 h-3.5 text-gold/60" aria-hidden="true" />
-              No obligation &bull; Confidential &bull; Honest guidance
+              <LocalizedCopy id="shopBenefitsSubtitle" />
             </p>
           </div>
         </Container>

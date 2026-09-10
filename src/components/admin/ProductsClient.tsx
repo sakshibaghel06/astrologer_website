@@ -12,6 +12,7 @@ import {
   deleteProduct,
   toggleProductActive,
 } from '@/app/admin/actions/products'
+import { useLanguage } from '@/components/LanguageProvider'
 
 interface Props { initialProducts: Product[] }
 
@@ -46,6 +47,7 @@ function ProductForm({
   onCancel: () => void
   submitLabel: string
 }) {
+  const { t } = useLanguage()
   const [isPending, startTransition] = useTransition()
   const [serverError, setServerError] = useState('')
   const { register, handleSubmit, formState: { errors } } = useForm<ProductFormValues>({
@@ -57,7 +59,7 @@ function ProductForm({
     setServerError('')
     startTransition(async () => {
       try { await onSave(data) }
-      catch { setServerError('Failed to save product.') }
+      catch { setServerError(`${t.common.products} ${t.common.save.toLowerCase()} failed.`) }
     })
   }
 
@@ -71,21 +73,21 @@ function ProductForm({
 
       <div className="grid sm:grid-cols-2 gap-4">
         <div className="sm:col-span-2">
-          <label htmlFor="pf-name" className="label-cosmic">Name *</label>
-          <input id="pf-name" className="input-cosmic" placeholder="Product name" {...register('name')} />
+          <label htmlFor="pf-name" className="label-cosmic">{t.common.productName} *</label>
+          <input id="pf-name" className="input-cosmic" placeholder={t.common.productName} {...register('name')} />
           <FieldError message={errors.name?.message} />
         </div>
         <div>
-          <label htmlFor="pf-price" className="label-cosmic">Price (₹) *</label>
+          <label htmlFor="pf-price" className="label-cosmic">{t.common.price} (₹) *</label>
           <input id="pf-price" type="number" step="0.01" className="input-cosmic"
             placeholder="999"
             {...register('price', { valueAsNumber: true })} />
           <FieldError message={errors.price?.message} />
         </div>
         <div>
-          <label htmlFor="pf-cat" className="label-cosmic">Category *</label>
+          <label htmlFor="pf-cat" className="label-cosmic">{t.common.category} *</label>
           <select id="pf-cat" className="input-cosmic" {...register('category')}>
-            <option value="">Select category</option>
+            <option value="">{t.common.category}</option>
             {PRODUCT_CATEGORIES.map(c => (
               <option key={c} value={c}>{CATEGORY_LABELS[c] ?? c}</option>
             ))}
@@ -93,26 +95,26 @@ function ProductForm({
           <FieldError message={errors.category?.message} />
         </div>
         <div className="sm:col-span-2">
-          <label htmlFor="pf-desc" className="label-cosmic">Description *</label>
+          <label htmlFor="pf-desc" className="label-cosmic">{t.common.description} *</label>
           <textarea id="pf-desc" rows={3} className="input-cosmic resize-none"
-            placeholder="Short description…" {...register('description')} />
+            placeholder={t.common.description} {...register('description')} />
           <FieldError message={errors.description?.message} />
         </div>
         <div className="sm:col-span-2">
-          <label htmlFor="pf-img" className="label-cosmic">Image URL <span className="text-muted text-xs">(optional)</span></label>
+          <label htmlFor="pf-img" className="label-cosmic">{t.common.imageUrl} <span className="text-muted text-xs">({t.common.optional})</span></label>
           <input id="pf-img" type="url" className="input-cosmic" placeholder="https://…" {...register('image_url')} />
           <FieldError message={errors.image_url?.message} />
         </div>
         <div className="flex items-center gap-3">
           <input id="pf-active" type="checkbox" className="w-4 h-4 accent-gold-bright" {...register('active')} />
-          <label htmlFor="pf-active" className="text-sm text-silver cursor-pointer">Active (visible on shop)</label>
+          <label htmlFor="pf-active" className="text-sm text-silver cursor-pointer">{t.common.active}</label>
         </div>
       </div>
 
       <div className="flex gap-3 pt-2">
-        <button type="button" onClick={onCancel} className="btn-secondary flex-1 text-sm">Cancel</button>
+        <button type="button" onClick={onCancel} className="btn-secondary flex-1 text-sm">{t.common.cancel}</button>
         <button type="submit" disabled={isPending} aria-busy={isPending} className="btn-primary flex-1 text-sm">
-          {isPending ? <><Loader2 className="w-4 h-4 animate-spin" />Saving…</> : submitLabel}
+          {isPending ? <><Loader2 className="w-4 h-4 animate-spin" />{t.common.save}…</> : submitLabel}
         </button>
       </div>
     </form>
@@ -120,6 +122,11 @@ function ProductForm({
 }
 
 export default function ProductsClient({ initialProducts }: Props) {
+  const { t } = useLanguage()
+  const categoryLabels: Record<string, string> = {
+    consultation: t.common.consultations, report: t.common.reports, relationship: t.common.relationships,
+    career: t.common.career, gemstone: t.home.personalised, yantra: t.home.ancientWisdom, rudraksha: t.home.practical, other: t.common.all,
+  }
   const [products, setProducts]           = useState(initialProducts)
   const [modal, setModal]                 = useState<'create' | 'edit' | null>(null)
   const [editTarget, setEditTarget]       = useState<Product | null>(null)
@@ -136,7 +143,7 @@ export default function ProductsClient({ initialProducts }: Props) {
     const result = await createProduct(data)
     if (result.success) {
       setModal(null)
-      flash('ok', 'Product created.')
+      flash('ok', `${t.common.products} created.`)
       // Re-fetch is handled by revalidatePath; optimistic: just close modal
     } else {
       throw new Error(result.error)
@@ -152,7 +159,7 @@ export default function ProductsClient({ initialProducts }: Props) {
         : p))
       setModal(null)
       setEditTarget(null)
-      flash('ok', 'Product updated.')
+      flash('ok', `${t.common.products} updated.`)
     } else {
       throw new Error(result.error)
     }
@@ -163,9 +170,9 @@ export default function ProductsClient({ initialProducts }: Props) {
       const result = await deleteProduct(id)
       if (result.success) {
         setProducts(prev => prev.filter(p => p.id !== id))
-        flash('ok', 'Product deleted.')
+        flash('ok', `${t.common.products} deleted.`)
       } else {
-        flash('err', result.error ?? 'Failed to delete.')
+        flash('err', result.error ?? `${t.common.products} delete failed.`)
       }
       setDeleteConfirm(null)
     })
@@ -177,7 +184,7 @@ export default function ProductsClient({ initialProducts }: Props) {
       if (result.success) {
         setProducts(prev => prev.map(p => p.id === id ? { ...p, active } : p))
       } else {
-        flash('err', result.error ?? 'Failed to update.')
+        flash('err', result.error ?? `${t.common.products} update failed.`)
       }
     })
   }
@@ -186,9 +193,9 @@ export default function ProductsClient({ initialProducts }: Props) {
     <div className="flex flex-col gap-5">
       {/* Toolbar */}
       <div className="flex items-center justify-between gap-4">
-        <p className="text-xs text-muted">{products.length} product{products.length !== 1 ? 's' : ''}</p>
+        <p className="text-xs text-muted">{products.length} {t.common.products}</p>
         <button type="button" onClick={() => setModal('create')} className="btn-primary text-sm px-5">
-          <Plus className="w-4 h-4" />Add Product
+          <Plus className="w-4 h-4" />{t.common.add} {t.common.products}
         </button>
       </div>
 
@@ -201,7 +208,7 @@ export default function ProductsClient({ initialProducts }: Props) {
 
       {products.length === 0 && !modal && (
         <div className="card-cosmic px-5 py-16 text-center text-muted text-sm">
-          No products yet. Click &ldquo;Add Product&rdquo; to create one.
+          {t.common.noProducts}
         </div>
       )}
 
@@ -212,7 +219,7 @@ export default function ProductsClient({ initialProducts }: Props) {
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
                 <p className="text-cream font-semibold text-sm leading-snug">{product.name}</p>
-                <span className="badge-violet text-[10px] mt-1">{CATEGORY_LABELS[product.category] ?? product.category}</span>
+                <span className="badge-violet text-[10px] mt-1">{categoryLabels[product.category] ?? product.category}</span>
               </div>
               <p className="font-serif font-bold text-gold-bright text-base shrink-0">
                 ₹{product.price.toLocaleString('en-IN')}
@@ -229,7 +236,7 @@ export default function ProductsClient({ initialProducts }: Props) {
                 {product.active
                   ? <ToggleRight className="w-5 h-5 text-emerald-400" />
                   : <ToggleLeft className="w-5 h-5 text-muted" />}
-                {product.active ? 'Active' : 'Inactive'}
+                {product.active ? t.common.active : t.common.inactive}
               </button>
 
               {/* Edit + Delete */}
@@ -260,10 +267,10 @@ export default function ProductsClient({ initialProducts }: Props) {
           <div className="relative z-10 w-full max-w-lg card-cosmic p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-5">
               <h2 className="font-serif text-cream font-semibold text-lg">
-                {modal === 'create' ? 'Add Product' : 'Edit Product'}
+                {modal === 'create' ? `${t.common.add} ${t.common.products}` : `${t.common.edit} ${t.common.products}`}
               </h2>
               <button type="button" onClick={() => { setModal(null); setEditTarget(null) }}
-                aria-label="Close" className="text-muted hover:text-cream transition-colors">
+                aria-label={t.common.close} className="text-muted hover:text-cream transition-colors">
                 <X className="w-5 h-5" />
               </button>
             </div>
@@ -276,7 +283,7 @@ export default function ProductsClient({ initialProducts }: Props) {
               } : undefined}
               onSave={modal === 'create' ? handleCreate : handleUpdate}
               onCancel={() => { setModal(null); setEditTarget(null) }}
-              submitLabel={modal === 'create' ? 'Create Product' : 'Save Changes'}
+              submitLabel={modal === 'create' ? `${t.common.add} ${t.common.products}` : t.common.saveChanges}
             />
           </div>
         </div>
@@ -284,18 +291,18 @@ export default function ProductsClient({ initialProducts }: Props) {
 
       {/* Delete confirm */}
       {deleteConfirm && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center px-4" role="dialog" aria-modal="true" aria-label="Confirm deletion">
+        <div className="fixed inset-0 z-50 flex items-center justify-center px-4" role="dialog" aria-modal="true" aria-label={t.common.deleteProduct}>
           <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={() => setDeleteConfirm(null)} />
           <div className="relative z-10 w-full max-w-sm card-cosmic p-6 flex flex-col gap-4">
-            <h2 className="font-serif text-cream font-semibold">Delete Product?</h2>
-            <p className="text-silver text-sm">This action cannot be undone. The product will be permanently removed.</p>
+            <h2 className="font-serif text-cream font-semibold">{t.common.deleteProduct}?</h2>
+            <p className="text-silver text-sm">{t.home.finalDescription}</p>
             <div className="flex gap-3">
-              <button type="button" onClick={() => setDeleteConfirm(null)} className="btn-secondary flex-1 text-sm">Cancel</button>
+              <button type="button" onClick={() => setDeleteConfirm(null)} className="btn-secondary flex-1 text-sm">{t.common.cancel}</button>
               <button type="button" onClick={() => handleDeleteConfirm(deleteConfirm)}
                 disabled={isPending}
                 className="flex-1 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold bg-red-600 text-white hover:bg-red-500 transition-colors disabled:opacity-60">
                 {isPending ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
-                Delete
+                {t.common.delete}
               </button>
             </div>
           </div>

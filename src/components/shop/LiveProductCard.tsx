@@ -12,6 +12,7 @@ import {
 } from 'lucide-react'
 import type { Product } from '@/types/database'
 import { SERVICE_NAME_TO_SLUG, type AvailableService } from '@/lib/validations'
+import { useLanguage } from '@/components/LanguageProvider'
 
 // ─── Category → icon ─────────────────────────────────────────────────────────
 
@@ -27,17 +28,6 @@ const CATEGORY_ICON: Record<string, LucideIcon> = {
 }
 
 // ─── Category label / badge / gradient (all full static strings) ──────────────
-
-const CATEGORY_LABELS: Record<string, string> = {
-  consultation: 'Consultation',
-  report:       'Report',
-  relationship: 'Relationship',
-  career:       'Career',
-  gemstone:     'Gemstone',
-  yantra:       'Yantra',
-  rudraksha:    'Rudraksha',
-  other:        'Other',
-}
 
 const CATEGORY_BADGE: Record<string, string> = {
   consultation: 'bg-violet/20 text-violet-glow border-violet/30',
@@ -80,10 +70,16 @@ interface LiveProductCardProps {
 }
 
 export default function LiveProductCard({ product }: LiveProductCardProps) {
+  const { t } = useLanguage()
   const Icon         = CATEGORY_ICON[product.category] ?? Star
   const badgeClass   = CATEGORY_BADGE[product.category] ?? CATEGORY_BADGE.other
   const gradientClass= ICON_GRADIENT[product.category]  ?? 'from-violet to-gold'
-  const categoryLabel= CATEGORY_LABELS[product.category] ?? product.category
+  const categoryLabel = ({
+    consultation: t.common.consultations,
+    report: t.common.reports,
+    relationship: t.common.relationships,
+    career: t.common.career,
+  } as Record<string, string>)[product.category] ?? product.category
   const bookingHref  = `/appointment?service=${bookingSlug(product.name)}`
 
   return (
@@ -136,7 +132,7 @@ export default function LiveProductCard({ product }: LiveProductCardProps) {
       <div className="px-6 pb-6 pt-4 border-t border-cosmic-border flex items-center justify-between gap-4">
         <div className="flex flex-col gap-0.5">
           <span className="text-muted text-[10px] uppercase tracking-widest">
-            Starting from
+            {t.common.startingFrom}
           </span>
           <span className="font-serif text-2xl font-bold text-gradient-gold">
             ₹{product.price.toLocaleString('en-IN')}
@@ -148,7 +144,7 @@ export default function LiveProductCard({ product }: LiveProductCardProps) {
           className="btn-primary text-xs px-5 py-2.5 shrink-0"
           aria-label={`Book ${product.name}`}
         >
-          Book Now
+          {t.common.bookNow}
           <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
         </Link>
       </div>
