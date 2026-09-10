@@ -4,6 +4,7 @@ import AppointmentForm from '@/components/appointment/AppointmentForm'
 import { SERVICE_SLUG_MAP } from '@/lib/validations'
 import type { AvailableService } from '@/lib/validations'
 import { Sparkles, Shield, Clock, Star } from 'lucide-react'
+import LocalizedCopy from '@/components/LocalizedCopy'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
@@ -34,7 +35,7 @@ export default async function AppointmentPage({ searchParams }: AppointmentPageP
       {/* ── Hero ────────────────────────────────────────────────────── */}
       <section
         className="relative pt-32 pb-16 overflow-hidden"
-        aria-label="Appointment booking hero"
+        aria-label="Appointment"
       >
         {/* Ambient glows */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -47,30 +48,28 @@ export default async function AppointmentPage({ searchParams }: AppointmentPageP
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/5 text-gold-bright text-xs font-semibold tracking-[0.2em] uppercase mb-7">
               <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-              Book a Consultation
+              <LocalizedCopy id="appointmentBadge" />
             </div>
 
             <h1 className="heading-serif text-4xl sm:text-5xl font-bold leading-tight mb-5">
-              Reserve Your{' '}
-              <span className="text-gradient-gold">Cosmic Session</span>
+              <LocalizedCopy id="appointmentTitlePrefix" />{' '}
+              <span className="text-gradient-gold"><LocalizedCopy id="appointmentTitleHighlight" /></span>
             </h1>
 
             <p className="text-silver text-lg leading-relaxed mb-8 max-w-xl">
-              Choose your service, pick a date and time that works for you,
-              and confirm your booking. We&apos;ll reach out to confirm within
-              one business day.
+              <LocalizedCopy id="appointmentDescription" />
             </p>
 
             {/* Trust badges */}
             <div className="flex flex-wrap gap-4">
               {[
-                { icon: Shield, text: 'Fully Confidential' },
-                { icon: Clock,  text: 'Response in 24 hrs' },
-                { icon: Star,   text: 'Personalised Reading' },
+                { icon: Shield, text: 'appointmentConfidential' as const },
+                { icon: Clock,  text: 'appointmentResponse' as const },
+                { icon: Star,   text: 'appointmentReading' as const },
               ].map(({ icon: Icon, text }) => (
                 <div key={text} className="flex items-center gap-1.5 text-xs text-muted">
                   <Icon className="w-3.5 h-3.5 text-gold-bright" aria-hidden="true" />
-                  {text}
+                  <LocalizedCopy id={text} />
                 </div>
               ))}
             </div>
@@ -89,7 +88,7 @@ export default async function AppointmentPage({ searchParams }: AppointmentPageP
 
         <Container size="default">
           <h2 id="booking-form-heading" className="sr-only">
-            Appointment booking form
+            <LocalizedCopy id="appointmentForm" />
           </h2>
 
           {/* AppointmentForm is a client component that manages all 4 steps */}

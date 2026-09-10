@@ -16,8 +16,82 @@ import {
 } from 'lucide-react'
 import { useLanguage } from '@/components/LanguageProvider'
 
+const SERVICES = [
+  {
+    icon: BookOpen,
+    title: 'Birth Chart Analysis',
+    description:
+      'Understand your unique birth chart, planetary influences, houses, strengths, challenges, and important life patterns.',
+    features: [
+      'Detailed birth chart reading',
+      'Planetary influences',
+      'Important life patterns',
+      'Personalised guidance',
+    ],
+  },
+  {
+    icon: Heart,
+    title: 'Love & Relationship',
+    description:
+      'Gain deeper insight into relationships, compatibility, emotional patterns, and the planetary influences affecting your connections.',
+    features: [
+      'Relationship compatibility',
+      'Emotional patterns',
+      'Karmic influences',
+      'Relationship guidance',
+    ],
+  },
+  {
+    icon: Briefcase,
+    title: 'Career & Finance',
+    description:
+      'Explore your professional strengths, career direction, financial patterns, and favourable periods for important decisions.',
+    features: [
+      'Career direction',
+      'Professional strengths',
+      'Financial patterns',
+      'Timing & opportunities',
+    ],
+  },
+  {
+    icon: Compass,
+    title: 'Life Guidance',
+    description:
+      'A comprehensive astrology consultation covering your life direction, purpose, major transitions, and important upcoming phases.',
+    features: [
+      'Life direction',
+      'Purpose & goals',
+      'Major life phases',
+      'Practical guidance',
+    ],
+  },
+]
+
+const BENEFITS = [
+  {
+    icon: Sparkles,
+    title: 'Personalised Insights',
+    description:
+      'Every consultation is based on your individual birth chart and personal questions.',
+  },
+  {
+    icon: Shield,
+    title: 'Confidential',
+    description:
+      'Your personal information and consultation details are treated with complete privacy.',
+  },
+  {
+    icon: Compass,
+    title: 'Practical Guidance',
+    description:
+      'Receive clear insights that can help you make thoughtful decisions in everyday life.',
+  },
+]
+
 export default function ServicesPage() {
   const { t } = useLanguage()
+  void SERVICES
+  void BENEFITS
   const services = t.services.servicesList.map((service, index) => ({
     ...service,
     icon: [BookOpen, Heart, Briefcase, Compass][index],

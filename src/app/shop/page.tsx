@@ -4,9 +4,8 @@ import Container from '@/components/ui/Container'
 import SectionHeading from '@/components/ui/SectionHeading'
 import Card from '@/components/ui/Card'
 import LiveProductFilters from '@/components/shop/LiveProductFilters'
-import ProductFilters from '@/components/shop/ProductFilters'
 import { getActiveProducts } from '@/app/shop/actions'
-import { STATIC_PRODUCTS, SHOP_CATEGORIES } from '@/lib/shop-data'
+import { SHOP_CATEGORIES } from '@/lib/shop-data'
 import {
   Sparkles,
   Eye,
@@ -17,43 +16,19 @@ import {
   MessageCircle,
   AlertCircle,
 } from 'lucide-react'
+import LocalizedCopy from '@/components/LocalizedCopy'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: 'Astrology Services & Reports',
+  title: 'Astrology Shop',
   description:
-    'Explore personalised astrology consultations, birth chart reports, relationship readings, and career guidance from an experienced Vedic astrologer.',
+    'Browse astrology products, reports, spiritual tools, and consultations from AstroJyotish.',
 }
 
 // ─── Static data ──────────────────────────────────────────────────────────────
 
-const BENEFITS = [
-  {
-    icon: Eye,
-    title: 'Personalised Guidance',
-    description:
-      'Every service is built from your unique birth chart — no generic forecasts, no one-size-fits-all readings.',
-  },
-  {
-    icon: Zap,
-    title: 'Clear & Practical Insights',
-    description:
-      'Guidance you can act on. Each reading focuses on clarity and practical takeaways for your real situation.',
-  },
-  {
-    icon: Shield,
-    title: 'Confidential Sessions',
-    description:
-      'Everything discussed stays completely private. Your chart, your questions, and your session details are yours alone.',
-  },
-  {
-    icon: Award,
-    title: 'Experienced Approach',
-    description:
-      'Rooted in classical Jyotish with 10+ years of active practice and over 1,000 consultations completed.',
-  },
-]
+const BENEFITS = [Eye, Zap, Shield, Award]
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -61,12 +36,7 @@ export default async function ShopPage() {
   // Attempt to load live products from Supabase
   const result = await getActiveProducts()
 
-  // Determine what to render in the product grid:
-  //   - Supabase succeeded + has rows → use LiveProductFilters (DB data)
-  //   - Supabase succeeded + empty    → fall back to static data (static filters)
-  //   - Supabase failed               → fall back to static data + show soft error note
-  const useLive    = result.success && result.data.length > 0
-  const dbError    = !result.success
+  const dbError = !result.success
   const liveProducts = result.success ? result.data : []
 
   return (
@@ -76,7 +46,7 @@ export default async function ShopPage() {
       ══════════════════════════════════════════════════════════════ */}
       <section
         className="relative pt-32 pb-20 overflow-hidden"
-        aria-label="Services page hero"
+        aria-label="Shop"
       >
         {/* Ambient glows */}
         <div className="absolute inset-0 pointer-events-none" aria-hidden="true">
@@ -126,18 +96,15 @@ export default async function ShopPage() {
           <div className="max-w-2xl">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/5 text-gold-bright text-xs font-semibold tracking-[0.2em] uppercase mb-7">
               <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-              Astrology Services
+              <LocalizedCopy id="shopBadge" />
             </div>
 
             <h1 className="heading-serif text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
-              Guidance Designed for{' '}
-              <span className="text-gradient-gold">Your Journey</span>
+              <LocalizedCopy id="shopTitle" />
             </h1>
 
             <p className="text-silver text-lg leading-relaxed max-w-xl">
-              Explore personalised astrology consultations and reports designed
-              to bring clarity to the areas of life that matter most — love,
-              career, relationships, and purpose.
+              <LocalizedCopy id="shopDescription" />
             </p>
           </div>
         </Container>
@@ -150,46 +117,35 @@ export default async function ShopPage() {
       ══════════════════════════════════════════════════════════════ */}
       <section
         className="section-padding bg-section-dark relative"
-        aria-labelledby="services-grid-heading"
+        aria-labelledby="products-grid-heading"
       >
         <span className="divider-violet absolute top-0 inset-x-0" aria-hidden="true" />
 
         <Container>
           <div className="mb-10">
             <h2
-              id="services-grid-heading"
+              id="products-grid-heading"
               className="heading-serif text-2xl sm:text-3xl font-bold mb-2"
             >
-              All Services
+              <LocalizedCopy id="shopProducts" />
             </h2>
             <p className="text-muted text-sm">
-              Filter by category or browse all available readings and reports.
+              <LocalizedCopy id="shopFilterDescription" />
             </p>
           </div>
 
-          {/* Soft error note — only shown when DB failed and we fell back to static */}
+          {/* Soft error note — product data remains Supabase-driven. */}
           {dbError && (
             <div className="flex items-center gap-2 mb-8 rounded-xl border border-amber-800/40 bg-amber-900/20 px-4 py-3 text-sm text-amber-300">
               <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
-              Showing featured services. Live product catalogue temporarily unavailable.
+              <LocalizedCopy id="shopDbError" />
             </div>
           )}
 
-          {/* Live data from Supabase */}
-          {useLive && (
-            <LiveProductFilters
-              products={liveProducts}
-              categories={SHOP_CATEGORIES}
-            />
-          )}
-
-          {/* Static fallback — used when DB is empty or unavailable */}
-          {!useLive && (
-            <ProductFilters
-              products={STATIC_PRODUCTS}
-              categories={SHOP_CATEGORIES}
-            />
-          )}
+          <LiveProductFilters
+            products={liveProducts}
+            categories={SHOP_CATEGORIES}
+          />
         </Container>
 
         <span className="divider-gold absolute bottom-0 inset-x-0 opacity-30" aria-hidden="true" />
@@ -202,23 +158,22 @@ export default async function ShopPage() {
         <Container>
           <SectionHeading
             id="benefits-heading"
-            label="The Difference"
-            title="Why Choose a"
-            highlight="Personalised Reading?"
-            subtitle="A chart-based consultation goes far deeper than any sun-sign horoscope."
+            label={<LocalizedCopy id="shopBenefitsLabel" />}
+            title={<LocalizedCopy id="shopBenefitsTitle" />}
+            highlight={<LocalizedCopy id="shopBenefitsHighlight" />}
+            subtitle={<LocalizedCopy id="shopBenefitsSubtitle" />}
             className="mb-14"
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {BENEFITS.map((b) => {
-              const Icon = b.icon
+            {BENEFITS.map((Icon) => {
               return (
-                <Card key={b.title} accent className="p-6 flex flex-col gap-4 text-center items-center">
+                <Card key={Icon.displayName ?? Icon.name} accent className="p-6 flex flex-col gap-4 text-center items-center">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet/20 to-gold/10 border border-violet/20 flex items-center justify-center">
                     <Icon className="w-6 h-6 text-gold-bright" aria-hidden="true" />
                   </div>
-                  <h3 className="font-serif text-cream font-semibold">{b.title}</h3>
-                  <p className="text-muted text-sm leading-relaxed">{b.description}</p>
+                  <h3 className="font-serif text-cream font-semibold"><LocalizedCopy id="shopBenefitsTitle" /></h3>
+                  <p className="text-muted text-sm leading-relaxed"><LocalizedCopy id="shopBenefitsSubtitle" /></p>
                 </Card>
               )
             })}
@@ -249,30 +204,28 @@ export default async function ShopPage() {
               id="shop-cta-heading"
               className="heading-serif text-2xl sm:text-3xl font-bold text-balance"
             >
-              Not Sure Which Service{' '}
-              <span className="text-gradient-gold">Is Right for You?</span>
+              <LocalizedCopy id="shopCtaTitle" />{' '}
+              <span className="text-gradient-gold"><LocalizedCopy id="shopCtaHighlight" /></span>
             </h2>
 
             <p className="text-silver text-base max-w-md leading-relaxed">
-              We&apos;re happy to help you choose the right consultation based
-              on what you want clarity on. Send us a message and we&apos;ll
-              guide you.
+              <LocalizedCopy id="shopCtaDescription" />
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
               <Link href="/contact" className="btn-primary text-sm px-8 py-3.5">
                 <MessageCircle className="w-4 h-4" aria-hidden="true" />
-                Contact Us
+                <LocalizedCopy id="contactUs" />
               </Link>
               <Link href="/about" className="btn-secondary text-sm px-8 py-3.5">
-                Learn About Our Approach
+                <LocalizedCopy id="aboutApproach" />
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
             </div>
 
             <p className="text-muted text-xs flex items-center gap-2 mt-1">
               <Shield className="w-3.5 h-3.5 text-gold/60" aria-hidden="true" />
-              No obligation &bull; Confidential &bull; Honest guidance
+              <LocalizedCopy id="shopBenefitsSubtitle" />
             </p>
           </div>
         </Container>

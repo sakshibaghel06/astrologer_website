@@ -4,6 +4,7 @@ import { getAppointments } from '@/app/admin/actions/appointments'
 import { getProducts } from '@/app/admin/actions/products'
 import { getMessages } from '@/app/admin/actions/messages'
 import { format } from 'date-fns'
+import LocalizedCopy from '@/components/LocalizedCopy'
 
 export const metadata: Metadata = { title: 'Dashboard' }
 
@@ -66,8 +67,8 @@ export default async function DashboardPage() {
   return (
     <div className="flex flex-col gap-8">
       <div>
-        <h1 className="heading-serif text-2xl sm:text-3xl font-bold mb-1">Dashboard</h1>
-        <p className="text-muted text-sm">Overview of your astrology practice.</p>
+        <h1 className="heading-serif text-2xl sm:text-3xl font-bold mb-1"><LocalizedCopy id="adminDashboard" /></h1>
+        <p className="text-muted text-sm"><LocalizedCopy id="adminDashboard" /></p>
       </div>
 
       {/* Errors */}
@@ -99,14 +100,14 @@ export default async function DashboardPage() {
       {/* Recent appointments */}
       <div className="card-cosmic overflow-hidden">
         <div className="px-5 py-4 border-b border-cosmic-border">
-          <h2 className="font-serif text-cream font-semibold">Recent Appointments</h2>
+          <h2 className="font-serif text-cream font-semibold"><LocalizedCopy id="adminAppointments" /></h2>
         </div>
 
         {recentAppointments.length === 0 ? (
-          <div className="px-5 py-12 text-center text-muted text-sm">No appointments yet.</div>
+          <div className="px-5 py-12 text-center text-muted text-sm"><LocalizedCopy id="adminAppointments" /></div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm" aria-label="Recent appointments">
+            <table className="w-full text-sm" aria-label="Appointments">
               <thead>
                 <tr className="border-b border-cosmic-border">
                   {['Name', 'Service', 'Date', 'Time', 'Status'].map(h => (

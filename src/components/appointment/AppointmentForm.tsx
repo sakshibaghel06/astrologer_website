@@ -8,6 +8,7 @@ import { AlertCircle, ChevronRight } from 'lucide-react'
 
 import { appointmentSchema, type AppointmentSchema, type AvailableService } from '@/lib/validations'
 import { createAppointment } from '@/app/appointment/actions'
+import { useLanguage } from '@/components/LanguageProvider'
 
 import ServiceSelector    from './ServiceSelector'
 import DateSelector       from './DateSelector'
@@ -18,13 +19,6 @@ import BookingConfirmation from './BookingConfirmation'
 // ─── Step definitions ─────────────────────────────────────────────────────────
 
 type Step = 'service' | 'datetime' | 'details' | 'summary' | 'confirmed'
-
-const STEPS: { id: Step; label: string; number: number }[] = [
-  { id: 'service',  label: 'Service',  number: 1 },
-  { id: 'datetime', label: 'Date & Time', number: 2 },
-  { id: 'details',  label: 'Your Details', number: 3 },
-  { id: 'summary',  label: 'Confirm',   number: 4 },
-]
 
 // ─── FieldError helper ────────────────────────────────────────────────────────
 
@@ -41,13 +35,20 @@ function FieldError({ message }: { message?: string }) {
 // ─── StepIndicator ────────────────────────────────────────────────────────────
 
 function StepIndicator({ current }: { current: Step }) {
+  const { t } = useLanguage()
   if (current === 'confirmed') return null
-  const currentIndex = STEPS.findIndex((s) => s.id === current)
+  const steps = [
+    { id: 'service' as Step, label: t.common.service, number: 1 },
+    { id: 'datetime' as Step, label: `${t.common.date} & ${t.common.time}`, number: 2 },
+    { id: 'details' as Step, label: t.common.name, number: 3 },
+    { id: 'summary' as Step, label: t.common.confirmAppointment, number: 4 },
+  ]
+  const currentIndex = steps.findIndex((s) => s.id === current)
 
   return (
-    <nav aria-label="Booking steps" className="mb-8">
+    <nav aria-label={t.common.appointmentForm} className="mb-8">
       <ol className="flex items-center gap-0">
-        {STEPS.map((step, i) => {
+        {steps.map((step, i) => {
           const done    = i < currentIndex
           const active  = step.id === current
 
@@ -71,7 +72,7 @@ function StepIndicator({ current }: { current: Step }) {
               </div>
 
               {/* Connector */}
-              {i < STEPS.length - 1 && (
+              {i < steps.length - 1 && (
                 <div
                   className={`flex-1 h-[2px] mx-1 sm:mx-2 transition-all duration-300 ${done ? 'bg-gold/60' : 'bg-cosmic-border'}`}
                   aria-hidden="true"
@@ -85,8 +86,6 @@ function StepIndicator({ current }: { current: Step }) {
   )
 }
 
-// ─── Props ────────────────────────────────────────────────────────────────────
-
 interface AppointmentFormProps {
   preselectedService: AvailableService | ''
 }
@@ -94,6 +93,7 @@ interface AppointmentFormProps {
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export default function AppointmentForm({ preselectedService }: AppointmentFormProps) {
+  const { t } = useLanguage()
   // ── Step state — skip service selection if arriving with a preselected service
   const [step, setStep] = useState<Step>(preselectedService ? 'datetime' : 'service')
 
@@ -158,7 +158,7 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
 
   function handleServiceNext() {
     if (!selectedService) {
-      setServiceError('Please select a service to continue.')
+      setServiceError(`${t.common.selectService}.`)
       return
     }
     setServiceError('')
@@ -170,13 +170,13 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
   function handleDatetimeNext() {
     let hasError = false
     if (!selectedDate) {
-      setDateError('Please select an appointment date.')
+      setDateError(`${t.common.date}.`)
       hasError = true
     } else {
       setDateError('')
     }
     if (!selectedTime) {
-      setTimeError('Please select a time slot.')
+      setTimeError(`${t.common.time}.`)
       hasError = true
     } else {
       setTimeError('')
@@ -271,8 +271,8 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
       {step === 'service' && (
         <div className={panelClass}>
           <div className="mb-6">
-            <h3 className="heading-serif text-xl font-semibold mb-1">Choose a Service</h3>
-            <p className="text-muted text-sm">Select the consultation or report you&apos;d like to book.</p>
+            <h3 className="heading-serif text-xl font-semibold mb-1">{t.common.selectService}</h3>
+            <p className="text-muted text-sm">{t.home.servicesSubtitle}</p>
           </div>
 
           <ServiceSelector
@@ -289,7 +289,7 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
 
           <div className="flex justify-end mt-6">
             <button type="button" onClick={handleServiceNext} className="btn-primary text-sm px-8">
-              Continue
+              {t.common.continue}
               <ChevronRight className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
@@ -300,14 +300,14 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
       {step === 'datetime' && (
         <div className={panelClass}>
           <div className="mb-6">
-            <h3 className="heading-serif text-xl font-semibold mb-1">Select Date &amp; Time</h3>
-            <p className="text-muted text-sm">Choose an available date and time slot for your appointment.</p>
+            <h3 className="heading-serif text-xl font-semibold mb-1">{t.common.date} &amp; {t.common.time}</h3>
+            <p className="text-muted text-sm">{t.home.finalDescription}</p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Date picker */}
             <div className="flex flex-col gap-2">
-              <span className="label-cosmic">Appointment Date</span>
+              <span className="label-cosmic">{t.common.date}</span>
               <DateSelector
                 selected={selectedDate}
                 onSelect={(date) => {
@@ -325,7 +325,7 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
             {/* Time slots */}
             <div className="flex flex-col gap-2">
               <span className="label-cosmic">
-                Available Time Slots
+                {t.common.availableTimeSlots}
                 {slotsLoading && (
                   <span className="ml-2 text-[10px] text-muted">(loading…)</span>
                 )}
@@ -338,7 +338,7 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
                   onSelect={(t) => { setSelectedTime(t); setTimeError('') }}
                 />
               ) : (
-                <p className="text-muted text-sm py-4">Please select a date first.</p>
+                <p className="text-muted text-sm py-4">{t.common.selectDateFirst}</p>
               )}
               <FieldError message={timeError} />
             </div>
@@ -354,10 +354,10 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
 
           <div className="flex justify-between mt-6">
             <button type="button" onClick={() => setStep('service')} className="btn-secondary text-sm">
-              Back
+              {t.common.back}
             </button>
             <button type="button" onClick={handleDatetimeNext} className="btn-primary text-sm px-8">
-              Continue
+              {t.common.continue}
               <ChevronRight className="w-4 h-4" aria-hidden="true" />
             </button>
           </div>
@@ -369,12 +369,12 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
         <form
           onSubmit={handleSubmit(handleDetailsNext)}
           noValidate
-          aria-label="Your contact details"
+          aria-label={t.common.contactForm}
         >
           <div className={panelClass}>
             <div className="mb-6">
-              <h3 className="heading-serif text-xl font-semibold mb-1">Your Details</h3>
-              <p className="text-muted text-sm">We&apos;ll use these details to confirm your appointment.</p>
+              <h3 className="heading-serif text-xl font-semibold mb-1">{t.common.name}</h3>
+              <p className="text-muted text-sm">{t.home.confidentialDescription}</p>
             </div>
 
             <div className="flex flex-col gap-5">
@@ -382,13 +382,13 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
               <div className="grid sm:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="appt-name" className="label-cosmic">
-                    Full Name <span className="text-red-400" aria-hidden="true">*</span>
+                    {t.common.fullName} <span className="text-red-400" aria-hidden="true">*</span>
                   </label>
                   <input
                     id="appt-name"
                     type="text"
                     autoComplete="name"
-                    placeholder="Your full name"
+                    placeholder={t.common.yourFullName}
                     aria-required="true"
                     aria-invalid={!!errors.name}
                     aria-describedby={errors.name ? 'appt-name-err' : undefined}
@@ -400,13 +400,13 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
 
                 <div>
                   <label htmlFor="appt-email" className="label-cosmic">
-                    Email <span className="text-red-400" aria-hidden="true">*</span>
+                    {t.common.email} <span className="text-red-400" aria-hidden="true">*</span>
                   </label>
                   <input
                     id="appt-email"
                     type="email"
                     autoComplete="email"
-                    placeholder="you@example.com"
+                    placeholder={t.common.email}
                     aria-required="true"
                     aria-invalid={!!errors.email}
                     aria-describedby={errors.email ? 'appt-email-err' : undefined}
@@ -420,13 +420,13 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
               {/* Phone */}
               <div className="sm:w-1/2">
                 <label htmlFor="appt-phone" className="label-cosmic">
-                  Phone <span className="text-red-400" aria-hidden="true">*</span>
+                  {t.common.phone} <span className="text-red-400" aria-hidden="true">*</span>
                 </label>
                 <input
                   id="appt-phone"
                   type="tel"
                   autoComplete="tel"
-                  placeholder="+91 98765 43210"
+                  placeholder={t.common.phone}
                   aria-required="true"
                   aria-invalid={!!errors.phone}
                   aria-describedby={errors.phone ? 'appt-phone-err' : undefined}
@@ -439,13 +439,13 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
               {/* Notes */}
               <div>
                 <label htmlFor="appt-notes" className="label-cosmic">
-                  Notes / Questions{' '}
-                  <span className="text-muted text-xs font-normal">(optional)</span>
+                  {t.common.notesQuestions}{' '}
+                  <span className="text-muted text-xs font-normal">({t.common.optional})</span>
                 </label>
                 <textarea
                   id="appt-notes"
                   rows={4}
-                  placeholder="Any specific questions or areas you'd like to focus on…"
+                  placeholder={t.home.astrologyDescription}
                   aria-invalid={!!errors.notes}
                   aria-describedby={errors.notes ? 'appt-notes-err' : undefined}
                   className="input-cosmic resize-none"
@@ -456,7 +456,7 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
             </div>
 
             <p className="text-muted text-xs mt-4">
-              Fields marked <span className="text-red-400" aria-hidden="true">*</span> are required.
+              {t.common.requiredFields}
             </p>
 
             <div className="flex justify-between mt-6">
@@ -465,10 +465,10 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
                 onClick={() => setStep('datetime')}
                 className="btn-secondary text-sm"
               >
-                Back
+                {t.common.back}
               </button>
               <button type="submit" className="btn-primary text-sm px-8">
-                Review Booking
+                {t.common.reviewBooking}
                 <ChevronRight className="w-4 h-4" aria-hidden="true" />
               </button>
             </div>
@@ -480,8 +480,8 @@ export default function AppointmentForm({ preselectedService }: AppointmentFormP
       {step === 'summary' && (
         <div className={panelClass}>
           <div className="mb-6">
-            <h3 className="heading-serif text-xl font-semibold mb-1">Review &amp; Confirm</h3>
-            <p className="text-muted text-sm">Please check your booking details before confirming.</p>
+            <h3 className="heading-serif text-xl font-semibold mb-1">{t.common.reviewBooking}</h3>
+            <p className="text-muted text-sm">{t.home.finalDescription}</p>
           </div>
 
           <BookingSummary

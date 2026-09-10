@@ -11,7 +11,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import type { Product } from '@/types/database'
-import { SERVICE_NAME_TO_SLUG, type AvailableService } from '@/lib/validations'
+import { useLanguage } from '@/components/LanguageProvider'
 
 // ─── Category → icon ─────────────────────────────────────────────────────────
 
@@ -27,17 +27,6 @@ const CATEGORY_ICON: Record<string, LucideIcon> = {
 }
 
 // ─── Category label / badge / gradient (all full static strings) ──────────────
-
-const CATEGORY_LABELS: Record<string, string> = {
-  consultation: 'Consultation',
-  report:       'Report',
-  relationship: 'Relationship',
-  career:       'Career',
-  gemstone:     'Gemstone',
-  yantra:       'Yantra',
-  rudraksha:    'Rudraksha',
-  other:        'Other',
-}
 
 const CATEGORY_BADGE: Record<string, string> = {
   consultation: 'bg-violet/20 text-violet-glow border-violet/30',
@@ -61,18 +50,6 @@ const ICON_GRADIENT: Record<string, string> = {
   other:        'from-violet/60 to-gold/40',
 }
 
-// ─── Derive the booking slug from the product name ───────────────────────────
-// Looks up the canonical slug from SERVICE_NAME_TO_SLUG first (guaranteed to
-// match SERVICE_SLUG_MAP on the appointment page). Falls back to a simple
-// kebab-case transform for products whose names aren't in the appointment
-// allow-list — those will land on /appointment without a preselection.
-
-function bookingSlug(name: string): string {
-  const canonical = SERVICE_NAME_TO_SLUG[name as AvailableService]
-  if (canonical) return canonical
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-}
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 interface LiveProductCardProps {
@@ -80,11 +57,17 @@ interface LiveProductCardProps {
 }
 
 export default function LiveProductCard({ product }: LiveProductCardProps) {
+  const { t } = useLanguage()
   const Icon         = CATEGORY_ICON[product.category] ?? Star
   const badgeClass   = CATEGORY_BADGE[product.category] ?? CATEGORY_BADGE.other
   const gradientClass= ICON_GRADIENT[product.category]  ?? 'from-violet to-gold'
-  const categoryLabel= CATEGORY_LABELS[product.category] ?? product.category
-  const bookingHref  = `/appointment?service=${bookingSlug(product.name)}`
+  const categoryLabel = ({
+    consultation: t.common.consultations,
+    report: t.common.reports,
+    relationship: t.common.relationships,
+    career: t.common.career,
+  } as Record<string, string>)[product.category] ?? product.category
+  const bookingHref  = `/shop/booking?product=${encodeURIComponent(product.id)}`
 
   return (
     <article
@@ -136,7 +119,7 @@ export default function LiveProductCard({ product }: LiveProductCardProps) {
       <div className="px-6 pb-6 pt-4 border-t border-cosmic-border flex items-center justify-between gap-4">
         <div className="flex flex-col gap-0.5">
           <span className="text-muted text-[10px] uppercase tracking-widest">
-            Starting from
+            {t.common.startingFrom}
           </span>
           <span className="font-serif text-2xl font-bold text-gradient-gold">
             ₹{product.price.toLocaleString('en-IN')}
@@ -148,7 +131,7 @@ export default function LiveProductCard({ product }: LiveProductCardProps) {
           className="btn-primary text-xs px-5 py-2.5 shrink-0"
           aria-label={`Book ${product.name}`}
         >
-          Book Now
+          {t.common.bookNow}
           <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
         </Link>
       </div>

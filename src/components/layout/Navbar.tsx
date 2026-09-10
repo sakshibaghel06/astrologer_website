@@ -3,20 +3,26 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, Star } from 'lucide-react'
+import { Menu, X, Star, Languages, Sun, Moon } from 'lucide-react'
+import { useLanguage } from '@/components/LanguageProvider'
+import { useTheme } from '@/components/ThemeProvider'
 
 const NAV_LINKS = [
   { label: 'Home',        href: '/' },
   { label: 'About',       href: '/about' },
-  { label: 'Services',    href: '/shop' },
+  { label: 'Services',    href: '/services' },
   { label: 'Appointment', href: '/appointment' },
   { label: 'Contact',     href: '/contact' },
+  { label: 'Shop',        href: '/shop' },
 ]
-
 export default function Navbar() {
-  const [isOpen, setIsOpen]       = useState(false)
-  const [scrolled, setScrolled]   = useState(false)
-  const pathname                  = usePathname()
+  const { language, setLanguage, t } = useLanguage()
+  const { theme, toggleTheme } = useTheme()
+  const [isOpen, setIsOpen] = useState(false)
+  const [languageOpen, setLanguageOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+
+  const pathname = usePathname()
 
   // Add backdrop-blur once user scrolls past 20px
   useEffect(() => {
@@ -75,13 +81,7 @@ export default function Navbar() {
                       }`}
                     aria-current={isActive ? 'page' : undefined}
                   >
-                    {link.label}
-                    {isActive && (
-                      <span
-                        className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-gold-bright"
-                        aria-hidden="true"
-                      />
-                    )}
+                    {t.nav[link.label.toLowerCase() as keyof typeof t.nav]}
                   </Link>
                 </li>
               )
@@ -90,13 +90,77 @@ export default function Navbar() {
 
           {/* ── Desktop CTA ───────────────────────────────────────────────── */}
           <div className="hidden md:flex items-center gap-3">
-            <Link
-              href="/appointment"
-              className="btn-primary text-xs px-5 py-2.5"
-            >
-              Book Consultation
-            </Link>
-          </div>
+ <button
+    type="button"
+    onClick={toggleTheme}
+    className="flex items-center justify-center w-9 h-9 rounded-full border border-cosmic-border text-silver hover:text-cream hover:border-gold/40 transition-all duration-200"
+    aria-label={theme === 'dark' ? t.common.themeLight : t.common.themeDark}
+    title={theme === 'dark' ? t.common.themeLight : t.common.themeDark}
+  >
+    {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+  </button>
+ <div className="relative">
+  <button
+    type="button"
+    onClick={() => setLanguageOpen((prev) => !prev)}
+    className="flex items-center gap-2 px-3 py-2 rounded-full border border-cosmic-border text-silver hover:text-cream hover:border-gold/40 transition-all duration-200"
+    aria-expanded={languageOpen}
+  >
+    <Languages className="w-4 h-4" />
+    <span className="text-sm">
+  {language === 'kn'
+    ? 'ಕನ್ನಡ'
+    : language === 'te'
+      ? 'తెలుగు'
+      : 'English'}
+</span>
+  </button>
+
+  {languageOpen && (
+    <div className="absolute right-0 mt-2 w-36 rounded-xl border border-cosmic-border bg-cosmic-deep shadow-xl overflow-hidden">
+      <button
+        type="button"
+        onClick={() => {
+          setLanguage('en')
+          setLanguageOpen(false)
+        }}
+        className="w-full text-left px-4 py-3 text-sm text-silver hover:bg-white/5 hover:text-cream"
+      >
+        English
+      </button>
+
+      <button
+        type="button"
+        onClick={() => {
+          setLanguage('kn')
+          setLanguageOpen(false)
+        }}
+        className="w-full text-left px-4 py-3 text-sm text-silver hover:bg-white/5 hover:text-cream"
+      >
+        ಕನ್ನಡ
+      </button>
+
+      <button
+        type="button"
+        onClick={() => {
+          setLanguage('te')
+          setLanguageOpen(false)
+        }}
+        className="w-full text-left px-4 py-3 text-sm text-silver hover:bg-white/5 hover:text-cream"
+      >
+        తెలుగు
+      </button>
+    </div>
+  )}
+</div>
+
+  <Link
+    href="/appointment"
+    className="btn-primary text-xs px-5 py-2.5"
+  >
+    {t.nav.bookConsultation}
+  </Link>
+</div>
 
           {/* ── Mobile menu toggle ────────────────────────────────────────── */}
           <button
@@ -139,19 +203,29 @@ export default function Navbar() {
                     {isActive && (
                       <span className="w-1.5 h-1.5 rounded-full bg-gold-bright" aria-hidden="true" />
                     )}
-                    {link.label}
+                    {t.nav[link.label.toLowerCase() as keyof typeof t.nav]}
                   </Link>
                 </li>
               )
             })}
           </ul>
           <div className="mt-4 pt-4 border-t border-cosmic-border">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="btn-ghost w-full justify-center text-sm mb-2"
+              tabIndex={isOpen ? 0 : -1}
+              aria-label={theme === 'dark' ? t.common.themeLight : t.common.themeDark}
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              {theme === 'dark' ? t.common.themeLight : t.common.themeDark}
+            </button>
             <Link
               href="/appointment"
               className="btn-primary w-full justify-center text-sm"
               tabIndex={isOpen ? 0 : -1}
             >
-              Book Consultation
+              {t.nav.bookConsultation}
             </Link>
           </div>
         </div>

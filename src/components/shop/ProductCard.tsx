@@ -13,6 +13,7 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import type { StaticProduct } from '@/lib/shop-data'
+import { useLanguage } from '@/components/LanguageProvider'
 
 // ─── Icon resolver ────────────────────────────────────────────────────────────
 // Maps the string icon name stored in static data to a real Lucide component.
@@ -33,17 +34,6 @@ const ICON_MAP: Record<string, LucideIcon> = {
 const FALLBACK_ICON = Star
 
 // ─── Category label map ───────────────────────────────────────────────────────
-
-const CATEGORY_LABELS: Record<string, string> = {
-  consultation:  'Consultation',
-  report:        'Report',
-  relationship:  'Relationship',
-  career:        'Career',
-  gemstone:      'Gemstone',
-  yantra:        'Yantra',
-  rudraksha:     'Rudraksha',
-  other:         'Other',
-}
 
 // ─── Badge colour map (full static classes — Tailwind won't purge dynamics) ──
 
@@ -78,11 +68,17 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
+  const { t } = useLanguage()
   const Icon = ICON_MAP[product.icon] ?? FALLBACK_ICON
   const badgeClass = CATEGORY_BADGE[product.category] ?? CATEGORY_BADGE.other
   const gradientClass = ICON_GRADIENT[product.category] ?? 'from-violet to-gold'
-  const categoryLabel = CATEGORY_LABELS[product.category] ?? product.category
-  const bookingHref = `/appointment?service=${product.slug}`
+  const categoryLabel = ({
+    consultation: t.common.consultations,
+    report: t.common.reports,
+    relationship: t.common.relationships,
+    career: t.common.career,
+  } as Record<string, string>)[product.category] ?? product.category
+  const bookingHref = `/shop/booking?product=${encodeURIComponent(product.id)}`
 
   return (
     <article
@@ -93,7 +89,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       {product.featured && (
         <div className="absolute top-3 right-3 z-10 flex flex-col gap-1.5 items-end">
           <span className="badge-gold text-[10px] px-2.5 py-1 whitespace-nowrap">
-            Most Popular
+            {t.common.mostPopular}
           </span>
         </div>
       )}
@@ -139,7 +135,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       <div className="px-6 pb-6 pt-4 border-t border-cosmic-border flex items-center justify-between gap-4">
         <div className="flex flex-col gap-0.5">
           <span className="text-muted text-[10px] uppercase tracking-widest">
-            Starting from
+            {t.common.startingFrom}
           </span>
           <span className="font-serif text-2xl font-bold text-gradient-gold">
             ₹{product.price.toLocaleString('en-IN')}
@@ -151,7 +147,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           className="btn-primary text-xs px-5 py-2.5 shrink-0"
           aria-label={`Book ${product.name}`}
         >
-          Book Now
+          {t.common.bookNow}
           <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
         </Link>
       </div>

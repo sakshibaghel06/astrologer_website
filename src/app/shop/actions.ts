@@ -7,6 +7,10 @@ export type ShopProductResult =
   | { success: true;  data: Product[] }
   | { success: false; error: string }
 
+export type ShopProductByIdResult =
+  | { success: true; data: Product }
+  | { success: false; error: string }
+
 /**
  * Fetch all active products for the public shop page.
  * Uses the service-role client so the query succeeds regardless of the
@@ -27,6 +31,7 @@ export async function getActiveProducts(): Promise<ShopProductResult> {
       .from('products')
       .select('*')
       .eq('active', true)
+      .not('category', 'in', '(consultation,report,relationship,career)')
       .order('created_at', { ascending: true })
 
     if (error) {
@@ -37,6 +42,36 @@ export async function getActiveProducts(): Promise<ShopProductResult> {
     return { success: true, data: (data ?? []) as Product[] }
   } catch (err) {
     console.error('[getActiveProducts] unexpected:', err)
+    return { success: false, error: 'An unexpected error occurred.' }
+  }
+}
+
+/** Fetch one active Shop product by ID for the separate Shop booking flow. */
+export async function getActiveShopProduct(productId: string): Promise<ShopProductByIdResult> {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+    return { success: false, error: 'Database not configured.' }
+  }
+
+  try {
+    const supabase = createServiceClient()
+    const { data, error } = await supabase
+      .from('products')
+      .select('*')
+      .eq('id', productId)
+      .eq('active', true)
+      .not('category', 'in', '(consultation,report,relationship,career)')
+      .maybeSingle()
+
+    if (error) {
+      console.error('[getActiveShopProduct]', error.message)
+      return { success: false, error: 'Failed to load product.' }
+    }
+
+    return data
+      ? { success: true, data: data as Product }
+      : { success: false, error: 'Product not found.' }
+  } catch (err) {
+    console.error('[getActiveShopProduct] unexpected:', err)
     return { success: false, error: 'An unexpected error occurred.' }
   }
 }

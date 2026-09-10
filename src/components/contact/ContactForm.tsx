@@ -10,6 +10,7 @@ import {
   type ContactFormSchema,
 } from '@/lib/validations'
 import { submitContactMessage } from '@/app/contact/actions'
+import { useLanguage } from '@/components/LanguageProvider'
 
 // ─── Field error helper ───────────────────────────────────────────────────────
 
@@ -26,6 +27,7 @@ function FieldError({ message }: { message?: string }) {
 // ─── Component ────────────────────────────────────────────────────────────────
 
 export default function ContactForm() {
+  const { t } = useLanguage()
   const [submitted, setSubmitted]     = useState(false)
   const [serverError, setServerError] = useState('')
   const [isPending, startTransition]  = useTransition()
@@ -69,11 +71,10 @@ export default function ContactForm() {
         </div>
         <div className="flex flex-col gap-2">
           <h3 className="heading-serif text-xl font-semibold text-cream">
-            Message Received
+            {t.common.messageReceived}
           </h3>
           <p className="text-silver text-sm max-w-xs leading-relaxed">
-            Thank you for getting in touch. We&apos;ll respond to your enquiry
-            within one business day.
+            {t.common.thankYouMessage}
           </p>
         </div>
         <button
@@ -81,7 +82,7 @@ export default function ContactForm() {
           onClick={() => { setSubmitted(false); setServerError('') }}
           className="btn-ghost text-xs px-5 py-2"
         >
-          Send another message
+          {t.common.sendAnotherMessage}
         </button>
       </div>
     )
@@ -93,7 +94,7 @@ export default function ContactForm() {
     <form
       onSubmit={handleSubmit(onSubmit)}
       noValidate
-      aria-label="Contact form"
+      aria-label={t.common.contactForm}
       className="flex flex-col gap-5"
     >
       {/* Server error */}
@@ -111,13 +112,13 @@ export default function ContactForm() {
       <div className="grid sm:grid-cols-2 gap-5">
         <div>
           <label htmlFor="cf-name" className="label-cosmic">
-            Full Name <span className="text-red-400" aria-hidden="true">*</span>
+            {t.common.fullName} <span className="text-red-400" aria-hidden="true">*</span>
           </label>
           <input
             id="cf-name"
             type="text"
             autoComplete="name"
-            placeholder="Your full name"
+            placeholder={t.common.yourFullName}
             aria-required="true"
             aria-invalid={!!errors.name}
             aria-describedby={errors.name ? 'cf-name-error' : undefined}
@@ -131,13 +132,13 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor="cf-email" className="label-cosmic">
-            Email Address <span className="text-red-400" aria-hidden="true">*</span>
+            {t.common.email} <span className="text-red-400" aria-hidden="true">*</span>
           </label>
           <input
             id="cf-email"
             type="email"
             autoComplete="email"
-            placeholder="you@example.com"
+            placeholder={t.common.email}
             aria-required="true"
             aria-invalid={!!errors.email}
             aria-describedby={errors.email ? 'cf-email-error' : undefined}
@@ -154,14 +155,14 @@ export default function ContactForm() {
       <div className="grid sm:grid-cols-2 gap-5">
         <div>
           <label htmlFor="cf-phone" className="label-cosmic">
-            Phone{' '}
-            <span className="text-muted text-xs font-normal">(optional)</span>
+            {t.common.phone}{' '}
+            <span className="text-muted text-xs font-normal">({t.common.optional})</span>
           </label>
           <input
             id="cf-phone"
             type="tel"
             autoComplete="tel"
-            placeholder="+91 98765 43210"
+            placeholder={t.common.phone}
             aria-invalid={!!errors.phone}
             aria-describedby={errors.phone ? 'cf-phone-error' : undefined}
             className="input-cosmic"
@@ -174,7 +175,7 @@ export default function ContactForm() {
 
         <div>
           <label htmlFor="cf-subject" className="label-cosmic">
-            Subject <span className="text-red-400" aria-hidden="true">*</span>
+            {t.common.subject} <span className="text-red-400" aria-hidden="true">*</span>
           </label>
           <select
             id="cf-subject"
@@ -185,7 +186,7 @@ export default function ContactForm() {
             {...register('subject')}
           >
             <option value="" disabled>
-              Select a subject
+              {t.common.selectSubject}
             </option>
             {CONTACT_SUBJECTS.map((s) => (
               <option key={s} value={s}>
@@ -202,12 +203,12 @@ export default function ContactForm() {
       {/* Row 3 — Message */}
       <div>
         <label htmlFor="cf-message" className="label-cosmic">
-          Message <span className="text-red-400" aria-hidden="true">*</span>
+          {t.common.message} <span className="text-red-400" aria-hidden="true">*</span>
         </label>
         <textarea
           id="cf-message"
           rows={5}
-          placeholder="Tell us what you'd like to know or discuss…"
+          placeholder={t.home.finalDescription}
           aria-required="true"
           aria-invalid={!!errors.message}
           aria-describedby={errors.message ? 'cf-message-error' : undefined}
@@ -220,8 +221,7 @@ export default function ContactForm() {
       </div>
 
       <p className="text-muted text-xs">
-        Fields marked <span className="text-red-400" aria-hidden="true">*</span>{' '}
-        are required.
+        {t.common.requiredFields}
       </p>
 
       {/* Submit */}
@@ -234,12 +234,12 @@ export default function ContactForm() {
         {isPending ? (
           <>
             <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
-            Sending…
+            {t.common.sending}
           </>
         ) : (
           <>
             <Send className="w-4 h-4" aria-hidden="true" />
-            Send Message
+            {t.common.sendMessage}
           </>
         )}
       </button>

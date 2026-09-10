@@ -1,4 +1,5 @@
-import type { Metadata } from 'next'
+'use client'
+
 import Link from 'next/link'
 import Container from '@/components/ui/Container'
 import SectionHeading from '@/components/ui/SectionHeading'
@@ -20,14 +21,9 @@ import {
   Clock,
   Scroll,
 } from 'lucide-react'
+import { useLanguage } from '@/components/LanguageProvider'
 
 // ─── Metadata ─────────────────────────────────────────────────────────────────
-
-export const metadata: Metadata = {
-  title: 'About Our Astrology Practice',
-  description:
-    'Learn about AstroJyotish — our experienced Vedic astrologer, credentials, philosophy, and personalised approach to astrological guidance.',
-}
 
 // ─── Static data ──────────────────────────────────────────────────────────────
 
@@ -114,6 +110,22 @@ const MISSION_POINTS = [
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function AboutPage() {
+  const { t } = useLanguage()
+  void CREDENTIALS
+  void EXPERTISE
+  void MISSION_POINTS
+  const credentials = [
+    { icon: Clock, value: '10+', label: t.home.yearsOfExperience, description: t.home.experiencedDescription },
+    { icon: Users, value: '1,000+', label: t.home.consultationsCompleted, description: t.home.personalisedDescription },
+    { icon: BookOpen, value: 'Classical', label: t.home.ancientWisdom, description: t.home.astrologyDescription },
+    { icon: Shield, value: '100%', label: t.home.confidential, description: t.home.confidentialDescription },
+  ]
+  const expertise = t.services.servicesList.map((item, index) => ({
+    ...item,
+    icon: [BookOpen, Heart, Briefcase, Compass][index],
+    color: ['from-violet to-violet-bright', 'from-gold-dim to-gold', 'from-violet-bright to-violet-glow', 'from-gold to-gold-bright'][index],
+  }))
+  const missionPoints = [t.home.understandStrengths, t.home.majorDecisions, t.home.relationshipPatterns, t.home.personalisedRemedies, t.home.practicalDescription]
   return (
     <>
       {/* ══════════════════════════════════════════════════════════════
@@ -155,19 +167,16 @@ export default function AboutPage() {
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-gold/30 bg-gold/5 text-gold-bright text-xs font-semibold tracking-[0.2em] uppercase mb-7">
               <Sparkles className="w-3.5 h-3.5" aria-hidden="true" />
-              About Our Astrology Practice
+              {t.home.ourAstrology}
             </div>
 
             <h1 className="heading-serif text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
-              Guidance{' '}
-              <span className="text-gradient-gold">Written in the Stars</span>
+              {t.home.guidanceYouCan}{' '}
+              <span className="text-gradient-gold">{t.home.trust}</span>
             </h1>
 
             <p className="text-silver text-lg leading-relaxed max-w-xl">
-              AstroJyotish is a dedicated Vedic astrology practice offering
-              personalised guidance for love, career, relationships, and
-              life&apos;s most important decisions — grounded in classical
-              scholarship and delivered with genuine care.
+              {t.home.finalDescription}
             </p>
           </div>
         </Container>
@@ -254,7 +263,7 @@ export default function AboutPage() {
               <div className="absolute -bottom-2 right-8 glass rounded-xl px-3 py-2 flex items-center gap-2 border border-gold/30">
                 <Award className="w-4 h-4 text-gold-bright" />
                 <span className="text-xs font-semibold text-cream">
-                  Certified Jyotish Practitioner
+                  {t.home.experiencedGuidance}
                 </span>
               </div>
             </div>
@@ -263,51 +272,42 @@ export default function AboutPage() {
             <div className="flex flex-col gap-5">
               <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase text-gold-bright">
                 <span className="glow-dot" aria-hidden="true" />
-                Meet Your Astrologer
+                {t.home.whatWeOffer}
               </span>
 
               <h2
                 id="astrologer-heading"
                 className="heading-serif text-3xl sm:text-4xl font-bold"
               >
-                Rooted in Tradition,{' '}
-                <span className="text-gradient-gold">Focused on You</span>
+                {t.home.ancientWisdom},{' '}
+                <span className="text-gradient-gold">{t.home.personalisedInsights}</span>
               </h2>
 
               <p className="text-silver leading-relaxed">
-                With over a decade of dedicated practice in Vedic astrology, I
-                have guided more than a thousand clients through some of
-                life&apos;s most important crossroads — career changes,
-                relationship decisions, relocation choices, and questions of
-                deeper purpose.
+                {t.home.astrologyDescription}
               </p>
 
               <p className="text-muted text-sm leading-relaxed">
-                My training is rooted in the classical tradition of{' '}
+                {t.home.astrologyDescription2}{' '}
                 <em className="text-gold-bright not-italic">
                   Brihat Parashara Hora Shastra
                 </em>{' '}
-                and Jaimini astrology. I hold a postgraduate certification in
-                Jyotish Visharad from a recognised institution and have
-                continued my studies under senior practitioners for years.
+                {t.home.experiencedDescription}
               </p>
 
               <p className="text-muted text-sm leading-relaxed">
-                Every consultation I offer is genuinely personalised. I take the
-                time to understand your specific situation and questions before
-                the session, so that the time we spend together is focused,
-                clear, and practically useful — not generic.
+                {t.home.personalisedDescription}
               </p>
 
               {/* Key facts */}
               <ul className="grid grid-cols-2 gap-3 mt-1" role="list">
                 {[
-                  'Jyotish Visharad certified',
-                  '10+ years active practice',
-                  'Classical lineage training',
-                  'Clients in 20+ countries',
-                  'Hindi & English sessions',
-                  'Written report included',
+                  t.home.experiencedGuidance,
+                  t.home.yearsOfExperience,
+                  t.home.ancientWisdom,
+                  t.home.countriesServed,
+                  t.home.confidentialConsultations,
+                  t.home.detailedBirthChart,
                 ].map((fact) => (
                   <li
                     key={fact}
@@ -327,7 +327,7 @@ export default function AboutPage() {
                 className="btn-primary w-fit text-sm mt-2"
               >
                 <Calendar className="w-4 h-4" aria-hidden="true" />
-                Book a Consultation
+                {t.home.bookConsultation}
               </Link>
             </div>
           </div>
@@ -349,15 +349,15 @@ export default function AboutPage() {
         <Container>
           <SectionHeading
             id="credentials-heading"
-            label="Track Record"
-            title="Experience You Can"
-            highlight="Rely On"
-            subtitle="Numbers and milestones that reflect the depth and breadth of this practice."
+            label={t.home.experiencedGuidance}
+            title={t.home.guidanceYouCan}
+            highlight={t.home.trust}
+            subtitle={t.home.whyChooseSubtitle}
             className="mb-14"
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {CREDENTIALS.map((c) => {
+            {credentials.map((c) => {
               const Icon = c.icon
               return (
                 <Card key={c.label} accent className="p-6 flex flex-col gap-4 text-center items-center">
@@ -397,15 +397,15 @@ export default function AboutPage() {
         <Container className="relative z-10">
           <SectionHeading
             id="expertise-heading"
-            label="Specialisations"
-            title="Areas of"
-            highlight="Expertise"
-            subtitle="Each area draws on specific classical techniques tailored to the questions you bring."
+            label={t.home.whatWeOffer}
+            title={t.home.ourAstrology}
+            highlight={t.home.services}
+            subtitle={t.home.servicesSubtitle}
             className="mb-14"
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {EXPERTISE.map((item) => {
+            {expertise.map((item) => {
               const Icon = item.icon
               return (
                 <Card
@@ -427,7 +427,7 @@ export default function AboutPage() {
                     href="/shop"
                     className="inline-flex items-center gap-1 text-xs font-semibold text-gold-bright hover:text-gold transition-colors group-hover:gap-2 duration-200"
                   >
-                    View Service
+                    {t.common.learnMore}
                     <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
                   </Link>
                 </Card>
@@ -456,37 +456,28 @@ export default function AboutPage() {
             <div className="flex flex-col gap-5">
               <span className="inline-flex items-center gap-2 text-xs font-semibold tracking-[0.2em] uppercase text-gold-bright">
                 <span className="glow-dot" aria-hidden="true" />
-                Our Philosophy
+                {t.home.ancientWisdom}
               </span>
 
               <h2
                 id="mission-heading"
                 className="heading-serif text-3xl sm:text-4xl font-bold"
               >
-                Making Astrology{' '}
-                <span className="text-gradient-gold">
-                  Practical, Personal &amp; Clear
-                </span>
+                {t.home.whatVedicAstrology}{' '}
+                <span className="text-gradient-gold">{t.home.canDoForYou}</span>
               </h2>
 
               <p className="text-silver leading-relaxed">
-                Our mission is straightforward: to make astrology genuinely
-                useful in your real life. That means going beyond vague
-                predictions to offer specific, honest, and grounded insight
-                based entirely on your individual chart.
+                {t.home.astrologyDescription}
               </p>
 
               <p className="text-muted text-sm leading-relaxed">
-                We believe a great astrological consultation should leave you
-                feeling more capable and clear — not dependent on further
-                readings or frightened by transit warnings. The stars describe
-                tendencies and timing. What you do with that information is
-                always your own.
+                {t.home.finalDescription}
               </p>
 
               {/* Mission points */}
               <ul className="flex flex-col gap-3 mt-2" role="list">
-                {MISSION_POINTS.map((point) => (
+                {missionPoints.map((point) => (
                   <li
                     key={point}
                     className="flex items-start gap-3 text-sm text-silver"
@@ -519,11 +510,10 @@ export default function AboutPage() {
                   &ldquo;
                 </span>
                 <blockquote className="text-cream font-serif text-lg sm:text-xl leading-relaxed italic mb-6">
-                  The stars incline, they do not compel. Astrology is a tool for
-                  wisdom — not a substitute for your own judgment and will.
+                  {t.home.practicalDescription}
                 </blockquote>
                 <p className="text-muted text-xs tracking-widest uppercase">
-                  — Core Practice Philosophy
+                  — {t.home.ancientWisdom}
                 </p>
 
                 {/* Divider */}
@@ -535,10 +525,10 @@ export default function AboutPage() {
                 {/* Approach summary */}
                 <div className="mt-6 grid grid-cols-2 gap-4">
                   {[
-                    { icon: BookOpen, label: 'Classical Methods' },
-                    { icon: Eye,      label: 'Honest Readings' },
-                    { icon: Users,    label: 'Client-Centred' },
-                    { icon: Shield,   label: 'Fully Confidential' },
+                    { icon: BookOpen, label: t.home.ancientWisdom },
+                    { icon: Eye,      label: t.home.personalisedInsights },
+                    { icon: Users,    label: t.home.clientSatisfaction },
+                    { icon: Shield,   label: t.home.confidential },
                   ].map(({ icon: Icon, label }) => (
                     <div key={label} className="flex items-center gap-2">
                       <Icon
@@ -580,13 +570,12 @@ export default function AboutPage() {
               id="about-cta-heading"
               className="heading-serif text-3xl sm:text-4xl font-bold text-balance"
             >
-              Ready to Explore Your{' '}
-              <span className="text-gradient-gold">Astrological Path?</span>
+              {t.home.readyToFind}{' '}
+              <span className="text-gradient-gold">{t.home.cosmicDirection}</span>
             </h2>
 
             <p className="text-silver text-base max-w-md leading-relaxed">
-              Take the first step toward greater clarity. Book a personalised
-              consultation or browse the full range of services available.
+              {t.home.finalDescription}
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4">
@@ -595,20 +584,20 @@ export default function AboutPage() {
                 className="btn-primary text-sm px-8 py-3.5"
               >
                 <Calendar className="w-4 h-4" aria-hidden="true" />
-                Book a Consultation
+                {t.home.bookConsultation}
               </Link>
               <Link
                 href="/shop"
                 className="btn-secondary text-sm px-8 py-3.5"
               >
-                View Services
+                {t.nav.services}
                 <ArrowRight className="w-4 h-4" aria-hidden="true" />
               </Link>
             </div>
 
             <p className="text-muted text-xs flex items-center gap-2 mt-1">
               <Shield className="w-3.5 h-3.5 text-gold/60" aria-hidden="true" />
-              Confidential &bull; Personalised &bull; Classical Vedic approach
+              {t.home.confidential} &bull; {t.home.personalised} &bull; {t.home.ancientWisdom}
             </p>
           </div>
         </Container>

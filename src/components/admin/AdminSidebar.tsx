@@ -14,6 +14,7 @@ import {
   X,
 } from 'lucide-react'
 import { signOut } from '@/app/admin/actions/auth'
+import { useLanguage } from '@/components/LanguageProvider'
 
 const NAV_ITEMS = [
   { href: '/admin/dashboard',    label: 'Dashboard',    icon: LayoutDashboard },
@@ -46,8 +47,10 @@ function NavLink({ href, label, icon: Icon, active, onClick }: {
 }
 
 export default function AdminSidebar() {
+  const { t } = useLanguage()
   const pathname = usePathname()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const navItems = NAV_ITEMS.map((item, index) => ({ ...item, label: [t.common.dashboard, t.common.appointments, t.common.products, t.common.messages][index] }))
 
   return (
     <>
@@ -57,7 +60,7 @@ export default function AdminSidebar() {
           <span className="w-7 h-7 rounded-full bg-gradient-to-br from-violet to-gold flex items-center justify-center">
             <Star className="w-3.5 h-3.5 text-cosmic-black fill-current" />
           </span>
-          <span className="font-serif font-bold text-sm text-cream">AstroJyotish <span className="text-gold-bright">Admin</span></span>
+          <span className="font-serif font-bold text-sm text-cream">AstroJyotish <span className="text-gold-bright">{t.common.admin}</span></span>
         </Link>
         <button
           type="button"
@@ -88,7 +91,7 @@ export default function AdminSidebar() {
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}
           md:translate-x-0
         `}
-        aria-label="Admin navigation"
+          aria-label={t.common.admin}
       >
         {/* Logo */}
         <div className="h-16 flex items-center px-5 border-b border-cosmic-border shrink-0">
@@ -98,14 +101,14 @@ export default function AdminSidebar() {
             </span>
             <div className="flex flex-col leading-tight">
               <span className="font-serif text-sm font-bold text-cream">AstroJyotish</span>
-              <span className="text-[10px] font-semibold tracking-widest uppercase text-gold-bright">Admin</span>
+              <span className="text-[10px] font-semibold tracking-widest uppercase text-gold-bright">{t.common.admin}</span>
             </div>
           </Link>
         </div>
 
         {/* Nav links */}
-        <nav className="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-1" aria-label="Admin sections">
-          {NAV_ITEMS.map(item => (
+        <nav className="flex-1 overflow-y-auto px-3 py-4 flex flex-col gap-1" aria-label={t.common.admin}>
+          {navItems.map(item => (
             <NavLink
               key={item.href}
               {...item}
@@ -124,7 +127,7 @@ export default function AdminSidebar() {
             className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-xs font-medium text-muted hover:text-cream hover:bg-white/5 transition-colors"
           >
             <Star className="w-4 h-4 shrink-0" />
-            View Website
+            {t.nav.home}
           </Link>
           <form action={signOut}>
             <button
@@ -132,7 +135,7 @@ export default function AdminSidebar() {
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all duration-200 focus-visible:outline-2 focus-visible:outline-gold-bright"
             >
               <LogOut className="w-4 h-4 shrink-0" />
-              Logout
+              {t.common.back}
             </button>
           </form>
         </div>

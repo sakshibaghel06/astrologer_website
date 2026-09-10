@@ -1,5 +1,6 @@
 import { Clock } from 'lucide-react'
 import { TIME_SLOTS, formatTimeSlot } from '@/lib/appointment-utils'
+import { useLanguage } from '@/components/LanguageProvider'
 
 interface TimeSlotSelectorProps {
   selectedDate: string    // YYYY-MM-DD
@@ -14,6 +15,7 @@ export default function TimeSlotSelector({
   bookedSlots,
   onSelect,
 }: TimeSlotSelectorProps) {
+  const { t } = useLanguage()
   // Disable slots that are in the past for today
   const todayStr = new Date().toISOString().slice(0, 10)
   const isToday = selectedDate === todayStr
@@ -23,7 +25,7 @@ export default function TimeSlotSelector({
     <div className="flex flex-col gap-4">
       <div className="flex items-center gap-2 text-sm text-silver">
         <Clock className="w-4 h-4 text-gold-bright shrink-0" aria-hidden="true" />
-        <span>All times shown in <strong className="text-cream">IST (Asia/Kolkata)</strong></span>
+        <span>{t.common.time}: <strong className="text-cream">IST (Asia/Kolkata)</strong></span>
       </div>
 
       <div
