@@ -35,10 +35,10 @@ export interface ShopCategory {
 
 export const SHOP_CATEGORIES: ShopCategory[] = [
   { value: 'all',          label: 'All' },
-  { value: 'consultation', label: 'Consultations' },
-  { value: 'report',       label: 'Reports' },
-  { value: 'relationship', label: 'Relationships' },
-  { value: 'career',       label: 'Career' },
+  { value: 'gemstone',     label: 'Gemstones' },
+  { value: 'yantra',       label: 'Yantras' },
+  { value: 'rudraksha',    label: 'Rudraksha' },
+  { value: 'other',        label: 'Other' },
 ]
 
 // ─── Product data ─────────────────────────────────────────────────────────────

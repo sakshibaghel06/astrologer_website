@@ -3,31 +3,33 @@
 import { useLanguage } from '@/components/LanguageProvider'
 
 type CopyId =
-  | 'shopBadge' | 'shopTitlePrefix' | 'shopTitleHighlight' | 'shopDescription'
-  | 'shopAllServices' | 'shopFilterDescription' | 'shopDbError'
+  | 'shopBadge' | 'shopTitle' | 'shopTitlePrefix' | 'shopTitleHighlight' | 'shopDescription'
+  | 'shopProducts' | 'shopAllServices' | 'shopFilterDescription' | 'shopDbError'
   | 'shopBenefitsLabel' | 'shopBenefitsTitle' | 'shopBenefitsHighlight' | 'shopBenefitsSubtitle'
   | 'shopCtaTitle' | 'shopCtaHighlight' | 'shopCtaDescription' | 'contactUs' | 'aboutApproach'
   | 'appointmentBadge' | 'appointmentTitlePrefix' | 'appointmentTitleHighlight'
   | 'appointmentDescription' | 'appointmentConfidential' | 'appointmentResponse' | 'appointmentReading'
-  | 'appointmentForm' | 'adminDashboard' | 'adminAppointments' | 'adminProducts' | 'adminMessages'
+  | 'appointmentForm' | 'adminDashboard' | 'adminAppointments' | 'adminProducts' | 'adminMessages' | 'backToShop' | 'productNotFound'
 
 export default function LocalizedCopy({ id }: { id: CopyId }) {
   const { t } = useLanguage()
   const copy: Record<CopyId, string> = {
-    shopBadge: t.home.ourAstrology,
-    shopTitlePrefix: t.home.guidanceYouCan,
-    shopTitleHighlight: t.home.trust,
-    shopDescription: t.home.servicesSubtitle,
-    shopAllServices: t.home.services,
-    shopFilterDescription: t.home.servicesSubtitle,
+    shopBadge: t.common.shopTitle,
+    shopTitle: t.common.shopTitle,
+    shopTitlePrefix: t.common.productCatalogue,
+    shopTitleHighlight: t.common.shopExplore,
+    shopDescription: t.common.shopDescription,
+    shopProducts: t.common.shopProducts,
+    shopAllServices: t.common.shopProducts,
+    shopFilterDescription: t.common.shopFilterDescription,
     shopDbError: t.home.finalDescription,
-    shopBenefitsLabel: t.home.whyChooseUs,
-    shopBenefitsTitle: t.home.guidanceYouCan,
-    shopBenefitsHighlight: t.home.trust,
-    shopBenefitsSubtitle: t.home.whyChooseSubtitle,
-    shopCtaTitle: t.home.readyToFind,
-    shopCtaHighlight: t.home.cosmicDirection,
-    shopCtaDescription: t.home.finalDescription,
+    shopBenefitsLabel: t.common.shopBenefitsLabel,
+    shopBenefitsTitle: t.common.shopBenefitsTitle,
+    shopBenefitsHighlight: t.common.shopBenefitsHighlight,
+    shopBenefitsSubtitle: t.common.shopBenefitsDescription,
+    shopCtaTitle: t.common.shopCtaTitle,
+    shopCtaHighlight: t.common.shopCtaHighlight,
+    shopCtaDescription: t.common.shopCtaDescription,
     contactUs: t.common.contactUs,
     aboutApproach: t.nav.about,
     appointmentBadge: t.home.bookConsultation,
@@ -42,6 +44,8 @@ export default function LocalizedCopy({ id }: { id: CopyId }) {
     adminAppointments: t.common.appointments,
     adminProducts: t.common.products,
     adminMessages: t.common.messages,
+    backToShop: t.common.backToShop,
+    productNotFound: t.common.productNotFound,
   }
   return <>{copy[id]}</>
 }

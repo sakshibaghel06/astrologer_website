@@ -11,7 +11,6 @@ import {
   type LucideIcon,
 } from 'lucide-react'
 import type { Product } from '@/types/database'
-import { SERVICE_NAME_TO_SLUG, type AvailableService } from '@/lib/validations'
 import { useLanguage } from '@/components/LanguageProvider'
 
 // ─── Category → icon ─────────────────────────────────────────────────────────
@@ -51,18 +50,6 @@ const ICON_GRADIENT: Record<string, string> = {
   other:        'from-violet/60 to-gold/40',
 }
 
-// ─── Derive the booking slug from the product name ───────────────────────────
-// Looks up the canonical slug from SERVICE_NAME_TO_SLUG first (guaranteed to
-// match SERVICE_SLUG_MAP on the appointment page). Falls back to a simple
-// kebab-case transform for products whose names aren't in the appointment
-// allow-list — those will land on /appointment without a preselection.
-
-function bookingSlug(name: string): string {
-  const canonical = SERVICE_NAME_TO_SLUG[name as AvailableService]
-  if (canonical) return canonical
-  return name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-}
-
 // ─── Component ────────────────────────────────────────────────────────────────
 
 interface LiveProductCardProps {
@@ -80,7 +67,7 @@ export default function LiveProductCard({ product }: LiveProductCardProps) {
     relationship: t.common.relationships,
     career: t.common.career,
   } as Record<string, string>)[product.category] ?? product.category
-  const bookingHref  = `/appointment?service=${bookingSlug(product.name)}`
+  const bookingHref  = `/shop/booking?product=${encodeURIComponent(product.id)}`
 
   return (
     <article

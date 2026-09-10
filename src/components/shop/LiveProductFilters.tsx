@@ -21,6 +21,18 @@ export default function LiveProductFilters({ products, categories }: LiveProduct
       ? products
       : products.filter((p) => p.category === active)
 
+  const categoryLabels: Record<string, string> = {
+    all: t.common.all,
+    consultation: t.common.consultations,
+    report: t.common.reports,
+    relationship: t.common.relationships,
+    career: t.common.career,
+    gemstone: t.common.gemstones,
+    yantra: t.common.yantras,
+    rudraksha: t.common.rudraksha,
+    other: t.common.other,
+  }
+
   return (
     <div className="flex flex-col gap-10">
       {/* ── Filter bar ──────────────────────────────────────────────────────── */}
@@ -53,7 +65,7 @@ export default function LiveProductFilters({ products, categories }: LiveProduct
                   }
                 `}
               >
-                {cat.label}
+                {categoryLabels[cat.value] ?? cat.label}
                 {isActive && (
                   <span className="ml-2 text-[10px] font-bold tabular-nums">
                     {filtered.length}
@@ -65,7 +77,7 @@ export default function LiveProductFilters({ products, categories }: LiveProduct
         </div>
 
         <span className="text-xs text-muted sm:ml-auto shrink-0">
-          {filtered.length} {t.common.servicesCount}
+          {filtered.length} {t.common.productsCount}
         </span>
       </div>
 
@@ -74,7 +86,7 @@ export default function LiveProductFilters({ products, categories }: LiveProduct
         <div
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           role="list"
-          aria-label={t.common.servicesCount}
+          aria-label={t.common.productsCount}
           aria-live="polite"
           aria-atomic="false"
         >

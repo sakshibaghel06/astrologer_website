@@ -78,7 +78,7 @@ export default function ProductCard({ product }: ProductCardProps) {
     relationship: t.common.relationships,
     career: t.common.career,
   } as Record<string, string>)[product.category] ?? product.category
-  const bookingHref = `/appointment?service=${product.slug}`
+  const bookingHref = `/shop/booking?product=${encodeURIComponent(product.id)}`
 
   return (
     <article

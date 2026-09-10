@@ -4,9 +4,8 @@ import Container from '@/components/ui/Container'
 import SectionHeading from '@/components/ui/SectionHeading'
 import Card from '@/components/ui/Card'
 import LiveProductFilters from '@/components/shop/LiveProductFilters'
-import ProductFilters from '@/components/shop/ProductFilters'
 import { getActiveProducts } from '@/app/shop/actions'
-import { STATIC_PRODUCTS, SHOP_CATEGORIES } from '@/lib/shop-data'
+import { SHOP_CATEGORIES } from '@/lib/shop-data'
 import {
   Sparkles,
   Eye,
@@ -22,39 +21,14 @@ import LocalizedCopy from '@/components/LocalizedCopy'
 // ─── Metadata ─────────────────────────────────────────────────────────────────
 
 export const metadata: Metadata = {
-  title: 'Astrology Services & Reports',
+  title: 'Astrology Shop',
   description:
-    'Explore personalised astrology consultations, birth chart reports, relationship readings, and career guidance from an experienced Vedic astrologer.',
+    'Browse astrology products, reports, spiritual tools, and consultations from AstroJyotish.',
 }
 
 // ─── Static data ──────────────────────────────────────────────────────────────
 
-const BENEFITS = [
-  {
-    icon: Eye,
-    title: 'Personalised Guidance',
-    description:
-      'Every service is built from your unique birth chart — no generic forecasts, no one-size-fits-all readings.',
-  },
-  {
-    icon: Zap,
-    title: 'Clear & Practical Insights',
-    description:
-      'Guidance you can act on. Each reading focuses on clarity and practical takeaways for your real situation.',
-  },
-  {
-    icon: Shield,
-    title: 'Confidential Sessions',
-    description:
-      'Everything discussed stays completely private. Your chart, your questions, and your session details are yours alone.',
-  },
-  {
-    icon: Award,
-    title: 'Experienced Approach',
-    description:
-      'Rooted in classical Jyotish with 10+ years of active practice and over 1,000 consultations completed.',
-  },
-]
+const BENEFITS = [Eye, Zap, Shield, Award]
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
@@ -62,12 +36,7 @@ export default async function ShopPage() {
   // Attempt to load live products from Supabase
   const result = await getActiveProducts()
 
-  // Determine what to render in the product grid:
-  //   - Supabase succeeded + has rows → use LiveProductFilters (DB data)
-  //   - Supabase succeeded + empty    → fall back to static data (static filters)
-  //   - Supabase failed               → fall back to static data + show soft error note
-  const useLive    = result.success && result.data.length > 0
-  const dbError    = !result.success
+  const dbError = !result.success
   const liveProducts = result.success ? result.data : []
 
   return (
@@ -131,8 +100,7 @@ export default async function ShopPage() {
             </div>
 
             <h1 className="heading-serif text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-6">
-              <LocalizedCopy id="shopTitlePrefix" />{' '}
-              <span className="text-gradient-gold"><LocalizedCopy id="shopTitleHighlight" /></span>
+              <LocalizedCopy id="shopTitle" />
             </h1>
 
             <p className="text-silver text-lg leading-relaxed max-w-xl">
@@ -149,24 +117,24 @@ export default async function ShopPage() {
       ══════════════════════════════════════════════════════════════ */}
       <section
         className="section-padding bg-section-dark relative"
-        aria-labelledby="services-grid-heading"
+        aria-labelledby="products-grid-heading"
       >
         <span className="divider-violet absolute top-0 inset-x-0" aria-hidden="true" />
 
         <Container>
           <div className="mb-10">
             <h2
-              id="services-grid-heading"
+              id="products-grid-heading"
               className="heading-serif text-2xl sm:text-3xl font-bold mb-2"
             >
-              <LocalizedCopy id="shopAllServices" />
+              <LocalizedCopy id="shopProducts" />
             </h2>
             <p className="text-muted text-sm">
               <LocalizedCopy id="shopFilterDescription" />
             </p>
           </div>
 
-          {/* Soft error note — only shown when DB failed and we fell back to static */}
+          {/* Soft error note — product data remains Supabase-driven. */}
           {dbError && (
             <div className="flex items-center gap-2 mb-8 rounded-xl border border-amber-800/40 bg-amber-900/20 px-4 py-3 text-sm text-amber-300">
               <AlertCircle className="w-4 h-4 shrink-0" aria-hidden="true" />
@@ -174,21 +142,10 @@ export default async function ShopPage() {
             </div>
           )}
 
-          {/* Live data from Supabase */}
-          {useLive && (
-            <LiveProductFilters
-              products={liveProducts}
-              categories={SHOP_CATEGORIES}
-            />
-          )}
-
-          {/* Static fallback — used when DB is empty or unavailable */}
-          {!useLive && (
-            <ProductFilters
-              products={STATIC_PRODUCTS}
-              categories={SHOP_CATEGORIES}
-            />
-          )}
+          <LiveProductFilters
+            products={liveProducts}
+            categories={SHOP_CATEGORIES}
+          />
         </Container>
 
         <span className="divider-gold absolute bottom-0 inset-x-0 opacity-30" aria-hidden="true" />
@@ -209,10 +166,9 @@ export default async function ShopPage() {
           />
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {BENEFITS.map((b) => {
-              const Icon = b.icon
+            {BENEFITS.map((Icon) => {
               return (
-                <Card key={b.title} accent className="p-6 flex flex-col gap-4 text-center items-center">
+                <Card key={Icon.displayName ?? Icon.name} accent className="p-6 flex flex-col gap-4 text-center items-center">
                   <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-violet/20 to-gold/10 border border-violet/20 flex items-center justify-center">
                     <Icon className="w-6 h-6 text-gold-bright" aria-hidden="true" />
                   </div>
