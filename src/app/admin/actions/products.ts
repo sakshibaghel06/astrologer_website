@@ -56,6 +56,7 @@ export async function createProduct(formData: unknown): Promise<ProductMutateRes
     }
 
     revalidatePath('/admin/products')
+    revalidatePath('/shop')
     return { success: true }
   } catch (err) {
     console.error('[createProduct] unexpected:', err)
@@ -90,6 +91,7 @@ export async function updateProduct(id: string, formData: unknown): Promise<Prod
     }
 
     revalidatePath('/admin/products')
+    revalidatePath('/shop')
     return { success: true }
   } catch (err) {
     console.error('[updateProduct] unexpected:', err)
@@ -108,6 +110,7 @@ export async function deleteProduct(id: string): Promise<ProductMutateResult> {
     }
 
     revalidatePath('/admin/products')
+    revalidatePath('/shop')
     return { success: true }
   } catch (err) {
     console.error('[deleteProduct] unexpected:', err)
@@ -129,6 +132,7 @@ export async function toggleProductActive(id: string, active: boolean): Promise<
     }
 
     revalidatePath('/admin/products')
+    revalidatePath('/shop')
     return { success: true }
   } catch (err) {
     console.error('[toggleProductActive] unexpected:', err)

@@ -25,6 +25,7 @@ export const metadata: Metadata = {
   description:
     'Browse astrology products, reports, spiritual tools, and consultations from AstroJyotish.',
 }
+export const revalidate = 60
 
 // ─── Static data ──────────────────────────────────────────────────────────────
 
