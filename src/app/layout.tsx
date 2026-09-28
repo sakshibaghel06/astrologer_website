@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from 'next'
+import { Analytics } from '@vercel/analytics/next'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Navbar } from '@/components/layout'
 import { Footer } from '@/components/layout'
 import { LanguageProvider } from '@/components/LanguageProvider'
@@ -79,16 +81,22 @@ export default function RootLayout({
         </a>
 
         <ThemeProvider>
-        <LanguageProvider>
-  <Navbar />
+          <LanguageProvider>
+            <Navbar />
 
-  <main id="main-content" className="flex-1">
-    {children}
-  </main>
+            <main id="main-content" className="flex-1">
+              {children}
+            </main>
 
-  <Footer />
-  </LanguageProvider>
-  </ThemeProvider>
+            <Footer />
+          </LanguageProvider>
+                </ThemeProvider>
+
+        {/* Vercel Web Analytics */}
+        <Analytics />
+
+        {/* Vercel Speed Insights */}
+        <SpeedInsights />
       </body>
     </html>
   )
